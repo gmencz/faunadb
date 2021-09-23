@@ -35,7 +35,10 @@ class Expression<T = unknown> {
     this.raw = raw;
   }
 
-  toJSON = () => {
+  // @ts-expect-error because it's a private field and we're using it nowhere.
+  // It's a function used by JSON serializers, not for the user to define
+  // which is why it must be private.
+  private toJSON = () => {
     return this.raw;
   };
 }

@@ -846,7 +846,7 @@ describe('Functions', () => {
                 "object": Object {
                   "predicate": Object {
                     "query": Object {
-                      "expression": 5,
+                      "expr": 5,
                       "lambda": "a",
                     },
                   },
@@ -898,6 +898,146 @@ describe('Functions', () => {
         "create_database": Object {
           "object": Object {
             "name": "child1",
+          },
+        },
+      }
+    `);
+  });
+
+  test('CreateIndex', () => {
+    let q = new Query<{
+      Collections: {
+        users: {
+          name: string;
+        };
+      };
+    }>();
+
+    expect(
+      q.CreateIndex({
+        name: 'new-index',
+        source: q.Collection('users'),
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "create_index": Object {
+          "object": Object {
+            "name": "new-index",
+            "source": Object {
+              "collection": "users",
+            },
+          },
+        },
+      }
+    `);
+
+    q = new Query<{
+      Collections: {
+        users: {
+          name: string;
+        };
+      };
+    }>();
+
+    expect(
+      q.CreateIndex({
+        name: 'new-index',
+        source: q.Collection('users'),
+        unique: true,
+        serialized: true,
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "create_index": Object {
+          "object": Object {
+            "name": "new-index",
+            "serialized": true,
+            "source": Object {
+              "collection": "users",
+            },
+            "unique": true,
+          },
+        },
+      }
+    `);
+
+    expect(
+      q.CreateIndex({
+        name: 'users_by_name',
+        source: {
+          collection: q.Collection('users'),
+          fields: {
+            name: q.Query(
+              q.Lambda('doc', q.Select(['data', 'name'], q.Var('doc')))
+            ),
+          },
+        },
+        terms: [{ binding: 'name' }],
+        values: [
+          { binding: 'name' },
+          { field: ['data', 'name'] },
+          { field: ['ref'] },
+        ],
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "create_index": Object {
+          "object": Object {
+            "name": "users_by_name",
+            "source": Object {
+              "object": Object {
+                "collection": Object {
+                  "collection": "users",
+                },
+                "fields": Object {
+                  "object": Object {
+                    "name": Object {
+                      "query": Object {
+                        "expr": Object {
+                          "from": Object {
+                            "var": "doc",
+                          },
+                          "select": Array [
+                            "data",
+                            "name",
+                          ],
+                        },
+                        "lambda": "doc",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "terms": Array [
+              Object {
+                "object": Object {
+                  "binding": "name",
+                },
+              },
+            ],
+            "values": Array [
+              Object {
+                "object": Object {
+                  "binding": "name",
+                },
+              },
+              Object {
+                "object": Object {
+                  "field": Array [
+                    "data",
+                    "name",
+                  ],
+                },
+              },
+              Object {
+                "object": Object {
+                  "field": Array [
+                    "ref",
+                  ],
+                },
+              },
+            ],
           },
         },
       }
@@ -1172,6 +1312,151 @@ describe('Functions', () => {
     expect(new Query().Now()).toMatchInlineSnapshot(`
       Object {
         "now": null,
+      }
+    `);
+  });
+
+  test('Query', () => {
+    const q = new Query();
+
+    expect(q.Query(q.Lambda('X', q.Var('X')))).toMatchInlineSnapshot(`
+      Object {
+        "query": Object {
+          "expr": Object {
+            "var": "X",
+          },
+          "lambda": "X",
+        },
+      }
+    `);
+
+    expect(
+      q.Query(
+        q.Lambda(['a', 'b'], {
+          a: q.Var('a'),
+          b: q.Var('b'),
+        })
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "query": Object {
+          "expr": Object {
+            "object": Object {
+              "a": Object {
+                "var": "a",
+              },
+              "b": Object {
+                "var": "b",
+              },
+            },
+          },
+          "lambda": Array [
+            "a",
+            "b",
+          ],
+        },
+      }
+    `);
+  });
+
+  test('Role', () => {
+    const q = new Query<{
+      Roles: ['moderator'];
+      Databases: ['db1'];
+    }>();
+
+    expect(q.Role('moderator')).toMatchInlineSnapshot(`
+      Object {
+        "role": "moderator",
+      }
+    `);
+
+    expect(q.Role('moderator', q.Database('db1'))).toMatchInlineSnapshot(`
+      Object {
+        "role": "moderator",
+        "scope": Object {
+          "database": "db1",
+        },
+      }
+    `);
+  });
+
+  test('Select', () => {
+    const q = new Query();
+
+    expect(q.Select(0, [1, 2])).toMatchInlineSnapshot(`
+      Object {
+        "from": Array [
+          1,
+          2,
+        ],
+        "select": 0,
+      }
+    `);
+
+    expect(q.Select([0], [1, 2])).toMatchInlineSnapshot(`
+      Object {
+        "from": Array [
+          1,
+          2,
+        ],
+        "select": Array [
+          0,
+        ],
+      }
+    `);
+
+    expect(q.Select([1], [1, 2])).toMatchInlineSnapshot(`
+      Object {
+        "from": Array [
+          1,
+          2,
+        ],
+        "select": Array [
+          1,
+        ],
+      }
+    `);
+
+    expect(q.Select(['hi'], [1, 2])).toMatchInlineSnapshot(`
+      Object {
+        "from": Array [
+          1,
+          2,
+        ],
+        "select": Array [
+          "hi",
+        ],
+      }
+    `);
+
+    expect(
+      q.Select<{ key1: string }>(['key1'], { key1: 'test' })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "from": Object {
+          "object": Object {
+            "key1": "test",
+          },
+        },
+        "select": Array [
+          "key1",
+        ],
+      }
+    `);
+
+    expect(q.Select<{ key1: string }>(['key1'], { key2: 'test' }, 'test'))
+      .toMatchInlineSnapshot(`
+      Object {
+        "default": "test",
+        "from": Object {
+          "object": Object {
+            "key2": "test",
+          },
+        },
+        "select": Array [
+          "key1",
+        ],
       }
     `);
   });

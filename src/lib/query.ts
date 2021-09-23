@@ -1,3 +1,4 @@
+import { Object as O } from 'ts-toolbelt';
 import { Expression, wrap } from './expression';
 
 type QuerySchema = {
@@ -5,6 +6,7 @@ type QuerySchema = {
   Collections?: Record<string, unknown>;
   Databases?: string[];
   Functions?: Record<string, unknown>;
+  Indexes?: string[];
   Roles?: string[];
 };
 
@@ -64,7 +66,7 @@ type CollectionReturnType<TCollectionName, TDatabaseName> =
 
 type LambdaReturnType = {
   lambda: string | string[];
-  expression: unknown;
+  expr: unknown;
 };
 
 type QueryReturnType = {
@@ -120,6 +122,71 @@ type CreateCollectionParams<
 
 type CreateDatabaseParams<TDatabaseName extends string> = {
   name: TDatabaseName;
+  data?: Record<string, unknown>;
+};
+
+type BuiltInRole = 'admin' | 'server' | 'server-readonly' | 'client';
+
+type CreateFunctionParams<
+  TFunctionName extends string,
+  TRoles extends QuerySchema['Roles'],
+  TDatabases extends QuerySchema['Databases']
+> = {
+  name: TFunctionName;
+  body: Expression<QueryReturnType>;
+  data?: Record<string, unknown>;
+  role?:
+    | BuiltInRole
+    | Expression<
+        RoleReturnType<
+          TRoles extends string[] ? TRoles[number] : string,
+          TDatabases extends string[] ? TDatabases[number] : string
+        >
+      >;
+};
+
+type SourceObject<
+  TCollections extends QuerySchema['Collections'],
+  TDatabases extends QuerySchema['Databases']
+> = {
+  collection: Expression<
+    CollectionReturnType<
+      TCollections extends string[] ? TCollections[number] : string,
+      TDatabases extends string[] ? TDatabases[number] : string
+    >
+  >;
+  fields: Record<string, Expression<QueryReturnType>>;
+};
+
+type TermObject = {
+  field?: string | string[];
+  binding?: string;
+};
+
+type ValueObject = {
+  field?: string | string[];
+  binding?: string;
+  reverse?: boolean;
+};
+
+type CreateIndexParams<
+  TIndexName extends string,
+  TCollections extends QuerySchema['Collections'],
+  TDatabases extends QuerySchema['Databases']
+> = {
+  name: TIndexName;
+  source:
+    | Expression<
+        CollectionReturnType<
+          TCollections extends string[] ? TCollections[number] : string,
+          TDatabases extends string[] ? TDatabases[number] : string
+        >
+      >
+    | SourceObject<TCollections, TDatabases>;
+  terms?: TermObject[];
+  values?: ValueObject[];
+  unique?: boolean;
+  serialized?: boolean;
   data?: Record<string, unknown>;
 };
 
@@ -718,7 +785,59 @@ class Query<
     });
   };
 
-  CreateFunction = () => {
+  /**
+   * The `CreateFunction` operation adds a new user-defined function with the specified parameters.
+   * @param params The settings.
+   * @returns An object containing the metadata of `CreateFunction` operations.
+   * @docs https://docs.fauna.com/fauna/current/api/fql/functions/createfunction
+   */
+  CreateFunction = <
+    TFunctionName extends TSchema['Functions'] extends string[]
+      ? TSchema['Functions'][number]
+      : string = TSchema['Functions'] extends string[]
+      ? TSchema['Functions'][number]
+      : string
+  >(
+    params: CreateFunctionParams<
+      TFunctionName,
+      TSchema['Roles'],
+      TSchema['Databases']
+    >
+  ) => {
+    return new Expression({
+      create_function: wrap(params),
+    });
+  };
+
+  /**
+   * The `CreateIndex` function adds a new index to the database with the specified parameters. After the transaction
+   * containing the `CreateIndex` is completed, the index is immediately available for reads. (The index may not be
+   * used in the transaction it was created, and it may not be created in the same transaction as its source collection(s).)
+   * The index may return incomplete results until it is fully built and marked as active. Fauna builds the index
+   * synchronously by scanning over relevant documents of the source collection(s).
+   * @param params The settings.
+   * @returns An object containing the metadata about the `CreateIndex` operations.
+   * @docs https://docs.fauna.com/fauna/current/api/fql/functions/createindex
+   */
+  CreateIndex = <
+    TIndexName extends TSchema['Indexes'] extends string[]
+      ? TSchema['Indexes'][number]
+      : string = TSchema['Indexes'] extends string[]
+      ? TSchema['Indexes'][number]
+      : string
+  >(
+    params: CreateIndexParams<
+      TIndexName,
+      TSchema['Collections'],
+      TSchema['Databases']
+    >
+  ) => {
+    return new Expression({
+      create_index: wrap(params),
+    });
+  };
+
+  CreateKey = () => {
     // TODO
   };
 
@@ -789,7 +908,7 @@ class Query<
   ): Expression<LambdaReturnType> => {
     return new Expression({
       lambda: params,
-      expression: wrap(expression),
+      expr: wrap(expression),
     });
   };
 
@@ -869,6 +988,35 @@ class Query<
 
     return new Expression({
       role: name,
+    });
+  };
+
+  /**
+   * The `Select` function extracts a single value from a document. It extracts the value specified by the `path`
+   * parameter out of the `from` parameter and returns the value. If the `path` does not exist, the optional `default`
+   * value is returned. If the `path` does not exist and the `default` value is not specified, an error is returned.
+   * @param path The field name path (the list of field names or array offsets required to access a specific field
+   * nested within the document structure), array offset, or field name within from to select.
+   * @param from The array or object containing the data to be selected.
+   * @param defaultValue The value to be returned if the path does not exist within from.
+   * @returns The value at the `path` within `from`, or the `default` value if the `path` does not exist within `from`.
+   */
+  Select = <TPathable = string | number>(
+    path: O.Paths<TPathable> | O.Paths<TPathable>[number],
+    from: unknown,
+    defaultValue?: unknown
+  ) => {
+    if (defaultValue) {
+      return new Expression({
+        from: wrap(from),
+        select: path,
+        default: wrap(defaultValue),
+      });
+    }
+
+    return new Expression({
+      from: wrap(from),
+      select: path,
     });
   };
 
