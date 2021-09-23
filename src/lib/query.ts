@@ -718,6 +718,10 @@ class Query<
     });
   };
 
+  CreateFunction = () => {
+    // TODO
+  };
+
   /**
    * The `Database` function returns a valid Reference for the specified child database `name`, within the specified child `database`.
    * If a child `database` is not specified, the returned database reference belongs to the current database.

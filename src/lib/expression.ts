@@ -1,4 +1,4 @@
-const wrapValues = (obj: Record<string, unknown>) => {
+const wrapValues = (obj: Record<string, unknown> | null) => {
   if (obj !== null) {
     const rv: Record<string, unknown> = {};
 
@@ -21,7 +21,7 @@ const wrap = (obj: unknown): unknown => {
     return new Expression(obj.map(el => wrap(el)));
   } else if (typeof obj === 'object') {
     return new Expression({
-      object: wrapValues(obj as Record<string, unknown>),
+      object: wrapValues(obj as Record<string, unknown> | null),
     });
   } else {
     return obj;
