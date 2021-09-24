@@ -1418,21 +1418,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Select(['hi'], [1, 2])).toMatchInlineSnapshot(`
-      Object {
-        "from": Array [
-          1,
-          2,
-        ],
-        "select": Array [
-          "hi",
-        ],
-      }
-    `);
-
-    expect(
-      q.Select<{ key1: string }>(['key1'], { key1: 'test' })
-    ).toMatchInlineSnapshot(`
+    expect(q.Select(['key1'], { key1: 'test' })).toMatchInlineSnapshot(`
       Object {
         "from": Object {
           "object": Object {
@@ -1445,8 +1431,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Select<{ key1: string }>(['key1'], { key2: 'test' }, 'test'))
-      .toMatchInlineSnapshot(`
+    expect(q.Select(['key2'], { key2: 'test' }, 'test')).toMatchInlineSnapshot(`
       Object {
         "default": "test",
         "from": Object {
@@ -1455,7 +1440,42 @@ describe('Functions', () => {
           },
         },
         "select": Array [
-          "key1",
+          "key2",
+        ],
+      }
+    `);
+
+    expect(
+      q.Select(
+        ['var1'],
+
+        q.Let(
+          {
+            var1: 1,
+          },
+          {
+            var1: q.Var('var1'),
+          }
+        )
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "from": Object {
+          "in": Object {
+            "object": Object {
+              "var1": Object {
+                "var": "var1",
+              },
+            },
+          },
+          "let": Array [
+            Object {
+              "var1": 1,
+            },
+          ],
+        },
+        "select": Array [
+          "var1",
         ],
       }
     `);

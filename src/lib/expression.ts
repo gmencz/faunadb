@@ -31,6 +31,10 @@ const wrap = (obj: unknown): unknown => {
 class Expression<T = unknown> {
   private raw: T;
 
+  // @ts-expect-error because it-s a private field and we're using it nowhere.
+  // It's used for TypeScript things.
+  private _isFaunaExpression = true;
+
   constructor(raw: T) {
     this.raw = raw;
   }

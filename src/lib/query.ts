@@ -1,4 +1,4 @@
-import { Object as O } from 'ts-toolbelt';
+import { O } from 'ts-toolbelt';
 import { Expression, wrap } from './expression';
 
 type QuerySchema = {
@@ -1001,9 +1001,14 @@ class Query<
    * @param defaultValue The value to be returned if the path does not exist within from.
    * @returns The value at the `path` within `from`, or the `default` value if the `path` does not exist within `from`.
    */
-  Select = <TPathable = string | number>(
-    path: O.Paths<TPathable> | O.Paths<TPathable>[number],
-    from: unknown,
+  Select = <
+    TFromArray extends unknown = unknown,
+    TFrom extends Expression | Record<string, unknown> | TFromArray[] = any
+  >(
+    path: TFrom extends Expression
+      ? string | number | (string | number)[]
+      : O.Paths<TFrom> | O.Paths<TFrom>[number],
+    from: TFrom,
     defaultValue?: unknown
   ) => {
     if (defaultValue) {
