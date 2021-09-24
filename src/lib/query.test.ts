@@ -1298,6 +1298,389 @@ describe('Functions', () => {
     `);
   });
 
+  test('Divide', () => {
+    const q = new Query();
+
+    expect(q.Divide(10, 5, 2)).toMatchInlineSnapshot(`
+      Object {
+        "divide": Array [
+          10,
+          5,
+          2,
+        ],
+      }
+    `);
+
+    expect(q.Divide(q.Divide(10, 5), 2)).toMatchInlineSnapshot(`
+      Object {
+        "divide": Array [
+          Object {
+            "divide": Array [
+              10,
+              5,
+            ],
+          },
+          2,
+        ],
+      }
+    `);
+  });
+
+  test('Do', () => {
+    const q = new Query<{
+      Collections: { magical_creatures: { name: string } };
+    }>();
+
+    expect(
+      q.Do(
+        q.Create(q.Ref(q.Collection('magical_creatures'), '2'), {
+          data: { name: 'Orwen' },
+        }),
+        q.Select('ref', q.Ref(q.Collection('magical_creatures'), '2'))
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "do": Array [
+          Object {
+            "create": Object {
+              "id": "2",
+              "ref": Object {
+                "collection": "magical_creatures",
+              },
+            },
+            "params": Object {
+              "object": Object {
+                "data": Object {
+                  "object": Object {
+                    "name": "Orwen",
+                  },
+                },
+              },
+            },
+          },
+          Object {
+            "from": Object {
+              "id": "2",
+              "ref": Object {
+                "collection": "magical_creatures",
+              },
+            },
+            "select": "ref",
+          },
+        ],
+      }
+    `);
+  });
+
+  test('Documents', () => {
+    const q = new Query<{
+      Collections: {
+        Letters: {};
+      };
+    }>();
+
+    expect(q.Documents(q.Collection('Letters'))).toMatchInlineSnapshot(`
+      Object {
+        "documents": Object {
+          "collection": "Letters",
+        },
+      }
+    `);
+  });
+
+  test('Drop', () => {
+    const q = new Query();
+
+    expect(q.Drop(2, [1, 2, 3])).toMatchInlineSnapshot(`
+      Object {
+        "collection": Array [
+          1,
+          2,
+          3,
+        ],
+        "drop": 2,
+      }
+    `);
+
+    expect(q.Drop(q.Var('numberToDrop'), [1, 2, q.Var('something')]))
+      .toMatchInlineSnapshot(`
+      Object {
+        "collection": Array [
+          1,
+          2,
+          Object {
+            "var": "something",
+          },
+        ],
+        "drop": Object {
+          "var": "numberToDrop",
+        },
+      }
+    `);
+  });
+
+  test('EndsWith', () => {
+    const q = new Query();
+
+    expect(q.EndsWith('123', '3')).toMatchInlineSnapshot(`
+      Object {
+        "endswith": "123",
+        "search": "3",
+      }
+    `);
+  });
+
+  test('Epoch', () => {
+    const q = new Query();
+
+    expect(q.Epoch(0, 'day')).toMatchInlineSnapshot(`
+      Object {
+        "epoch": 0,
+        "unit": "day",
+      }
+    `);
+  });
+
+  test('Equals', () => {
+    const q = new Query();
+
+    expect(q.Equals(1, 1)).toMatchInlineSnapshot(`
+      Object {
+        "equals": Array [
+          1,
+          1,
+        ],
+      }
+    `);
+
+    expect(q.Equals({ a: true }, { a: true })).toMatchInlineSnapshot(`
+      Object {
+        "equals": Array [
+          Object {
+            "object": Object {
+              "a": true,
+            },
+          },
+          Object {
+            "object": Object {
+              "a": true,
+            },
+          },
+        ],
+      }
+    `);
+  });
+
+  test('Events', () => {
+    const q = new Query<{ Collections: { posts: {} } }>();
+
+    expect(q.Events(q.Ref(q.Collection('posts'), '233555580689580553')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "events": Object {
+          "id": "233555580689580553",
+          "ref": Object {
+            "collection": "posts",
+          },
+        },
+      }
+    `);
+  });
+
+  test('Exists', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Exists(q.Ref(q.Collection('spells'), '181388642046968320')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "exists": Object {
+          "id": "181388642046968320",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+      }
+    `);
+
+    expect(q.Exists(q.Ref(q.Collection('spells'), '181388642046968320'), 99))
+      .toMatchInlineSnapshot(`
+      Object {
+        "exists": Object {
+          "id": "181388642046968320",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+        "ts": 99,
+      }
+    `);
+  });
+
+  test('Exp', () => {
+    const q = new Query<{ Collections: { posts: {} } }>();
+
+    expect(q.Exp(1.5)).toMatchInlineSnapshot(`
+      Object {
+        "exp": 1.5,
+      }
+    `);
+  });
+
+  test('Filter', () => {
+    const q = new Query<{ Collections: { posts: {} } }>();
+
+    expect(q.Filter([1, 2, 3], q.Lambda('i', q.Equals(0, q.Var('i')))))
+      .toMatchInlineSnapshot(`
+      Object {
+        "collection": Array [
+          1,
+          2,
+          3,
+        ],
+        "filter": Object {
+          "expr": Object {
+            "equals": Array [
+              0,
+              Object {
+                "var": "i",
+              },
+            ],
+          },
+          "lambda": "i",
+        },
+      }
+    `);
+  });
+
+  test('FindStr', () => {
+    const q = new Query();
+
+    expect(q.FindStr('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
+      Object {
+        "find": "fgfwear",
+        "findstr": "asdsad",
+      }
+    `);
+
+    expect(q.FindStr('asdsad', 'fgfwear', 8)).toMatchInlineSnapshot(`
+      Object {
+        "find": "fgfwear",
+        "findstr": "asdsad",
+        "start": 8,
+      }
+    `);
+  });
+
+  test('FindStrRegex', () => {
+    const q = new Query();
+
+    expect(q.FindStrRegex('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
+      Object {
+        "find": "fgfwear",
+        "findstrregex": "asdsad",
+      }
+    `);
+
+    expect(q.FindStrRegex('asdsad', 'fgfwear', 8)).toMatchInlineSnapshot(`
+      Object {
+        "find": "fgfwear",
+        "findstrregex": "asdsad",
+        "start": 8,
+      }
+    `);
+
+    expect(q.FindStrRegex('asdsad', 'fgfwear', 8, 12)).toMatchInlineSnapshot(`
+      Object {
+        "find": "fgfwear",
+        "findstrregex": "asdsad",
+        "num_results": 12,
+        "start": 8,
+      }
+    `);
+  });
+
+  test('Floor', () => {
+    const q = new Query();
+
+    expect(q.Floor(1.0)).toMatchInlineSnapshot(`
+      Object {
+        "floor": 1,
+      }
+    `);
+  });
+
+  test('Foreach', () => {
+    const q = new Query();
+
+    expect(q.Foreach([1, 2, 3], q.Lambda('i', q.Var('i'))))
+      .toMatchInlineSnapshot(`
+      Object {
+        "collection": Array [
+          1,
+          2,
+          3,
+        ],
+        "foreach": Object {
+          "expr": Object {
+            "var": "i",
+          },
+          "lambda": "i",
+        },
+      }
+    `);
+  });
+
+  test('Floor', () => {
+    const q = new Query();
+
+    expect(q.Floor(1.0)).toMatchInlineSnapshot(`
+      Object {
+        "floor": 1,
+      }
+    `);
+  });
+
+  test('Format', () => {
+    const q = new Query();
+
+    expect(q.Format('%nDecimals:')).toMatchInlineSnapshot(`
+      Object {
+        "format": "%nDecimals:",
+        "values": Array [],
+      }
+    `);
+
+    expect(q.Format('%nDecimals:', { a: true })).toMatchInlineSnapshot(`
+      Object {
+        "format": "%nDecimals:",
+        "values": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+
+    expect(q.Format('%nDecimals:', { a: true }, { b: true }))
+      .toMatchInlineSnapshot(`
+      Object {
+        "format": "%nDecimals:",
+        "values": Array [
+          Object {
+            "object": Object {
+              "a": true,
+            },
+          },
+          Object {
+            "object": Object {
+              "b": true,
+            },
+          },
+        ],
+      }
+    `);
+  });
+
   test('Function', () => {
     const q = new Query<{
       Databases: ['child1', 'child2'];
@@ -1331,6 +1714,24 @@ describe('Functions', () => {
           "scope": Object {
             "database": "child2",
           },
+        },
+      }
+    `);
+  });
+
+  test('Functions', () => {
+    const q = new Query();
+
+    expect(q.Functions()).toMatchInlineSnapshot(`
+      Object {
+        "functions": null,
+      }
+    `);
+
+    expect(q.Functions(q.Database('db1'))).toMatchInlineSnapshot(`
+      Object {
+        "functions": Object {
+          "database": "db1",
         },
       }
     `);
