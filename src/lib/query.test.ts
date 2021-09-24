@@ -1044,6 +1044,100 @@ describe('Functions', () => {
     `);
   });
 
+  test('CreateKey', () => {
+    const q = new Query();
+
+    expect(
+      q.CreateKey({
+        database: q.Database('prydain'),
+        role: 'server',
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "create_key": Object {
+          "object": Object {
+            "database": Object {
+              "database": "prydain",
+            },
+            "role": "server",
+          },
+        },
+      }
+    `);
+  });
+
+  test('CreateRole', () => {
+    const q = new Query<{ Collections: { spells: {} }; Roles: ['new-role'] }>();
+
+    expect(
+      q.CreateRole({
+        name: 'new-role',
+        privileges: [
+          {
+            resource: q.Collection('spells'),
+            actions: { read: true },
+          },
+        ],
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "create_role": Object {
+          "object": Object {
+            "name": "new-role",
+            "privileges": Array [
+              Object {
+                "object": Object {
+                  "actions": Object {
+                    "object": Object {
+                      "read": true,
+                    },
+                  },
+                  "resource": Object {
+                    "collection": "spells",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }
+    `);
+  });
+
+  test('Credentials', () => {
+    const q = new Query();
+
+    expect(q.Credentials()).toMatchInlineSnapshot(`
+      Object {
+        "credentials": null,
+      }
+    `);
+
+    expect(q.Credentials(q.Database('db1'))).toMatchInlineSnapshot(`
+      Object {
+        "credentials": Object {
+          "database": "db1",
+        },
+      }
+    `);
+  });
+
+  test('CurrentIdentity', () => {
+    expect(new Query().CurrentIdentity()).toMatchInlineSnapshot(`
+      Object {
+        "current_identity": null,
+      }
+    `);
+  });
+
+  test('CurrentToken', () => {
+    expect(new Query().CurrentToken()).toMatchInlineSnapshot(`
+      Object {
+        "current_token": null,
+      }
+    `);
+  });
+
   test('Database', () => {
     const q = new Query<{
       Databases: ['child1', 'child2', 'child3'];
@@ -1076,6 +1170,130 @@ describe('Functions', () => {
             "database": "child3",
           },
         },
+      }
+    `);
+  });
+
+  test('Databases', () => {
+    const q = new Query();
+
+    expect(q.Databases()).toMatchInlineSnapshot(`
+      Object {
+        "databases": null,
+      }
+    `);
+
+    expect(q.Databases(q.Database('db1'))).toMatchInlineSnapshot(`
+      Object {
+        "databases": Object {
+          "database": "db1",
+        },
+      }
+    `);
+  });
+
+  test('Date', () => {
+    expect(new Query().Date('1970-01-01')).toMatchInlineSnapshot(`
+      Object {
+        "date": "1970-01-01",
+      }
+    `);
+  });
+
+  test('DayOfMonth', () => {
+    const q = new Query();
+
+    expect(q.DayOfMonth(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "day_of_month": Object {
+          "time": "2019-04-29T12:51:17Z",
+        },
+      }
+    `);
+  });
+
+  test('DayOfWeek', () => {
+    const q = new Query();
+
+    expect(q.DayOfWeek(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "day_of_week": Object {
+          "time": "2019-04-29T12:51:17Z",
+        },
+      }
+    `);
+  });
+
+  test('DayOfYear', () => {
+    const q = new Query();
+
+    expect(q.DayOfYear(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "day_of_year": Object {
+          "time": "2019-04-29T12:51:17Z",
+        },
+      }
+    `);
+  });
+
+  test('Degrees', () => {
+    const q = new Query();
+
+    expect(q.Degrees(0.5)).toMatchInlineSnapshot(`
+      Object {
+        "degrees": 0.5,
+      }
+    `);
+  });
+
+  test('Delete', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Delete(q.Ref(q.Collection('spells'), '181388642581742080')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "delete": Object {
+          "id": "181388642581742080",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+      }
+    `);
+  });
+
+  test('Difference', () => {
+    const q = new Query();
+
+    expect(q.Difference(['A', 'B', 'C'], ['B', 'C', 'D']))
+      .toMatchInlineSnapshot(`
+      Object {
+        "difference": Array [
+          Array [
+            "A",
+            "B",
+            "C",
+          ],
+          Array [
+            "B",
+            "C",
+            "D",
+          ],
+        ],
+      }
+    `);
+  });
+
+  test('Distinct', () => {
+    const q = new Query();
+
+    expect(q.Distinct(['A', 'B', 'C'])).toMatchInlineSnapshot(`
+      Object {
+        "distinct": Array [
+          "A",
+          "B",
+          "C",
+        ],
       }
     `);
   });
@@ -1114,6 +1332,55 @@ describe('Functions', () => {
             "database": "child2",
           },
         },
+      }
+    `);
+  });
+
+  test('Lambda', () => {
+    const q = new Query();
+
+    expect(q.Query(q.Lambda('a', 5))).toMatchInlineSnapshot(`
+      Object {
+        "query": Object {
+          "expr": 5,
+          "lambda": "a",
+        },
+      }
+    `);
+
+    expect(q.Lambda('name', q.Concat([q.Var('name'), 'Wen'])))
+      .toMatchInlineSnapshot(`
+      Object {
+        "expr": Object {
+          "concat": Array [
+            Object {
+              "var": "name",
+            },
+            "Wen",
+          ],
+        },
+        "lambda": "name",
+      }
+    `);
+
+    expect(q.Lambda(['f', 'l'], q.Concat([q.Var('f'), q.Var('l')], ' ')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "expr": Object {
+          "concat": Array [
+            Object {
+              "var": "f",
+            },
+            Object {
+              "var": "l",
+            },
+          ],
+          "separator": " ",
+        },
+        "lambda": Array [
+          "f",
+          "l",
+        ],
       }
     `);
   });
@@ -1354,6 +1621,20 @@ describe('Functions', () => {
             "a",
             "b",
           ],
+        },
+      }
+    `);
+  });
+
+  test('Ref', () => {
+    const q = new Query<{ Collections: { spells: string } }>();
+
+    expect(q.Ref(q.Collection('spells'), '181388642046968320'))
+      .toMatchInlineSnapshot(`
+      Object {
+        "id": "181388642046968320",
+        "ref": Object {
+          "collection": "spells",
         },
       }
     `);

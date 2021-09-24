@@ -12,12 +12,14 @@ type QuerySchema = {
 
 type QueryVariables = Record<string, unknown>;
 
+type Expressionable<TValue = unknown> = Expression<TValue> | TValue;
+
 type DatabaseWithoutScopeReturnType<TDatabaseName> = {
-  database: TDatabaseName;
+  database: Expressionable<TDatabaseName>;
 };
 
 type DatabaseWithScopeReturnType<TDatabaseName> = {
-  database: TDatabaseName;
+  database: Expressionable<TDatabaseName>;
   scope: DatabaseWithoutScopeReturnType<TDatabaseName>;
 };
 
@@ -26,11 +28,11 @@ type DatabaseReturnType<TDatabaseName> =
   | DatabaseWithScopeReturnType<TDatabaseName>;
 
 type FunctionWithoutScopeReturnType<TFunctionName> = {
-  function: TFunctionName;
+  function: Expressionable<TFunctionName>;
 };
 
 type FunctionWithScopeReturnType<TFunctionName, TDatabaseName> = {
-  function: TFunctionName;
+  function: Expressionable<TFunctionName>;
   scope: DatabaseWithoutScopeReturnType<TDatabaseName>;
 };
 
@@ -39,11 +41,11 @@ type FunctionReturnType<TFunctionName, TDatabaseName> =
   | FunctionWithScopeReturnType<TFunctionName, TDatabaseName>;
 
 type RoleWithoutScopeReturnType<TRoleName> = {
-  role: TRoleName;
+  role: Expressionable<TRoleName>;
 };
 
 type RoleWithScopeReturnType<TRoleName, TDatabaseName> = {
-  role: TRoleName;
+  role: Expressionable<TRoleName>;
   scope: DatabaseWithoutScopeReturnType<TDatabaseName>;
 };
 
@@ -52,11 +54,11 @@ type RoleReturnType<TRoleName, TDatabaseName> =
   | RoleWithScopeReturnType<TRoleName, TDatabaseName>;
 
 type CollectionWithoutScopeReturnType<TCollectionName> = {
-  collection: TCollectionName;
+  collection: Expressionable<TCollectionName>;
 };
 
 type CollectionWithScopeReturnType<TCollectionName, TDatabaseName> = {
-  collection: TCollectionName;
+  collection: Expressionable<TCollectionName>;
   database: DatabaseReturnType<TDatabaseName>;
 };
 
@@ -73,7 +75,7 @@ type QueryReturnType = {
   query: Expression<LambdaReturnType>;
 };
 
-type Timestamp = { time: string } | { now: null };
+type Timestamp = { time: string | Expression<string> } | { now: null };
 
 type Normalizer = 'NFKCCaseFold' | 'NFC' | 'NFD' | 'NFKC' | 'NFKD';
 
@@ -145,6 +147,32 @@ type CreateFunctionParams<
       >;
 };
 
+type CreateKeyParams<
+  TRoles extends QuerySchema['Roles'],
+  TDatabases extends QuerySchema['Databases'],
+  TDatabaseName extends TDatabases extends string[]
+    ? TDatabases[number]
+    : string = TDatabases extends string[] ? TDatabases[number] : string
+> = {
+  role:
+    | BuiltInRole
+    | Expression<
+        RoleReturnType<
+          TRoles extends string[] ? TRoles[number] : string,
+          TDatabases extends string[] ? TDatabases[number] : string
+        >
+      >
+    | Expression<
+        RoleReturnType<
+          TRoles extends string[] ? TRoles[number] : string,
+          TDatabases extends string[] ? TDatabases[number] : string
+        >
+      >[];
+
+  database?: Expression<DatabaseReturnType<TDatabaseName>>;
+  data?: { name?: string } & Record<string, unknown>;
+};
+
 type SourceObject<
   TCollections extends QuerySchema['Collections'],
   TDatabases extends QuerySchema['Databases']
@@ -190,6 +218,39 @@ type CreateIndexParams<
   data?: Record<string, unknown>;
 };
 
+type PrivilegeActions = {
+  create: boolean | Expression<QueryReturnType>;
+  delete: boolean | Expression<QueryReturnType>;
+  read: boolean | Expression<QueryReturnType>;
+  write: boolean | Expression<QueryReturnType>;
+  history_read: boolean | Expression<QueryReturnType>;
+  history_write: boolean | Expression<QueryReturnType>;
+  unrestricted_read: boolean | Expression<QueryReturnType>;
+  call: boolean | Expression<QueryReturnType>;
+};
+
+type PrivilegeConfigurationObject = {
+  resource: Expression; // TODO: Improve when all system collections functions have been implemented (https://docs.fauna.com/fauna/current/security/roles#pco).
+  actions: O.AtLeast<PrivilegeActions>;
+};
+
+type MembershipConfigurationObject = {
+  resource: Expression; // TODO: Improve when all system collections functions have been implemented (https://docs.fauna.com/fauna/current/security/roles#pco).
+  predicate?: Expression<QueryReturnType>;
+};
+
+type CreateRoleParams<TRoleName extends string> = {
+  name: TRoleName;
+  privileges: PrivilegeConfigurationObject[];
+  membership?: MembershipConfigurationObject[];
+  data?: Record<string, unknown>;
+};
+
+type RefReturnType = {
+  id: string | Expression<string>;
+  ref: Expression;
+};
+
 class Query<
   TSchema extends QuerySchema = QuerySchema,
   TVariables extends QueryVariables = QueryVariables
@@ -197,14 +258,14 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/abort
    */
-  Abort = (message: string) => {
+  Abort = (message: Expressionable<string>) => {
     return new Expression({ abort: message });
   };
 
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/abs
    */
-  Abs = (value: number) => {
+  Abs = (value: Expressionable<number>) => {
     return new Expression({ abs: value });
   };
 
@@ -218,7 +279,7 @@ class Query<
       ? TSchema['AccessProviders'][number]
       : string
   >(
-    name: TAccessProviderName
+    name: Expressionable<TAccessProviderName>
   ) => {
     return new Expression({ access_provider: name });
   };
@@ -245,14 +306,14 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/acos
    */
-  Acos = (value: number) => {
+  Acos = (value: Expressionable<number>) => {
     return new Expression({ acos: value });
   };
 
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/add
    */
-  Add = (...values: number[]) => {
+  Add = (...values: Expressionable<number>[]) => {
     if (values.length === 1) {
       return new Expression({ add: values[0] });
     }
@@ -263,7 +324,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/all
    */
-  All = (...values: number[]) => {
+  All = (...values: Expressionable<number>[]) => {
     if (values.length === 1) {
       return new Expression({ all: values[0] });
     }
@@ -274,7 +335,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/and
    */
-  And = (...values: boolean[]) => {
+  And = (...values: Expressionable<boolean>[]) => {
     if (values.length === 1) {
       return new Expression({ and: values[0] });
     }
@@ -285,7 +346,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/any
    */
-  Any = (...values: boolean[]) => {
+  Any = (...values: Expressionable<boolean>[]) => {
     if (values.length === 1) {
       return new Expression({ any: values[0] });
     }
@@ -296,7 +357,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/append
    */
-  Append = (base: unknown[], elems: unknown[]) => {
+  Append = (base: unknown[] | Expression, elems: unknown[] | Expression) => {
     return new Expression({
       append: wrap(base),
       collection: wrap(elems),
@@ -306,7 +367,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/asin
    */
-  Asin = (value: number) => {
+  Asin = (value: Expressionable<number>) => {
     return new Expression({ asin: value });
   };
 
@@ -320,14 +381,14 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/atan
    */
-  Atan = (value: number) => {
+  Atan = (value: Expressionable<number>) => {
     return new Expression({ atan: value });
   };
 
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/bitand
    */
-  BitAnd = (...values: number[]) => {
+  BitAnd = (...values: Expressionable<number>[]) => {
     if (values.length === 1) {
       return new Expression({ bitand: values[0] });
     }
@@ -338,14 +399,14 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/bitnot
    */
-  BitNot = (value: number) => {
+  BitNot = (value: Expressionable<number>) => {
     return new Expression({ bitnot: value });
   };
 
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/bitor
    */
-  BitOr = (...values: number[]) => {
+  BitOr = (...values: Expressionable<number>[]) => {
     if (values.length === 1) {
       return new Expression({ bitor: values[0] });
     }
@@ -356,7 +417,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/bitxor
    */
-  BitXor = (...values: number[]) => {
+  BitXor = (...values: Expressionable<number>[]) => {
     if (values.length === 1) {
       return new Expression({ bitxor: values[0] });
     }
@@ -377,9 +438,9 @@ class Query<
     TArgs extends TSchema['Functions'][TFunctionName] = TSchema['Functions'][TFunctionName]
   >(
     fn:
-      | TFunctionName
+      | Expressionable<TFunctionName>
       | Expression<FunctionReturnType<TFunctionName, TDatabaseName>>,
-    args: TArgs
+    args: Expressionable<TArgs>
   ) => {
     return new Expression({
       call: fn,
@@ -390,7 +451,10 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/casefold
    */
-  Casefold = (value: string, normalizer?: Normalizer) => {
+  Casefold = (
+    value: Expressionable<string>,
+    normalizer?: Expressionable<Normalizer>
+  ) => {
     if (normalizer) {
       return new Expression({
         casefold: value,
@@ -406,7 +470,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/ceil
    */
-  Ceil = (value: number) => {
+  Ceil = (value: Expressionable<number>) => {
     return new Expression({
       ceil: value,
     });
@@ -423,7 +487,7 @@ class Query<
       ? TSchema['Databases'][number]
       : string
   >(
-    name: TCollectionName,
+    name: Expressionable<TCollectionName>,
     database?: Expression<DatabaseReturnType<TDatabaseName>>
   ) => {
     if (database) {
@@ -464,7 +528,10 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/concat
    */
-  Concat = (value: string[], separator?: string) => {
+  Concat = (
+    value: Expressionable<string>[],
+    separator?: string | Expression
+  ) => {
     if (separator) {
       return new Expression({
         concat: value,
@@ -480,7 +547,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/containsfield
    */
-  ContainsField = (field: string, value: unknown) => {
+  ContainsField = (field: Expressionable<string>, value: unknown) => {
     return new Expression({
       contains_field: field,
       in: wrap(value),
@@ -490,7 +557,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/containspath
    */
-  ContainsPath = (path: (string | number)[], value: unknown) => {
+  ContainsPath = (path: Expressionable<string | number>[], value: unknown) => {
     return new Expression({
       contains_path: path,
       in: wrap(value),
@@ -500,7 +567,10 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/containsstr
    */
-  ContainsStr = (value: string, search: string) => {
+  ContainsStr = (
+    value: Expressionable<string>,
+    search: Expressionable<string>
+  ) => {
     return new Expression({
       containsstr: value,
       search,
@@ -510,7 +580,10 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/containsstrregex
    */
-  ContainsStrRegex = (value: string, pattern: string) => {
+  ContainsStrRegex = (
+    value: Expressionable<string>,
+    pattern: Expressionable<string>
+  ) => {
     return new Expression({
       containsstrregex: value,
       pattern,
@@ -530,7 +603,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/cos
    */
-  Cos = (value: number) => {
+  Cos = (value: Expressionable<number>) => {
     return new Expression({
       cos: value,
     });
@@ -539,7 +612,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/cosh
    */
-  Cosh = (value: number) => {
+  Cosh = (value: Expressionable<number>) => {
     return new Expression({
       cosh: value,
     });
@@ -567,9 +640,9 @@ class Query<
     TData extends TSchema['Collections'][TCollectionName] = TSchema['Collections'][TCollectionName]
   >(
     collection:
-      | TCollectionName
+      | Expressionable<TCollectionName>
       | Expression<CollectionReturnType<TCollectionName, TDatabaseName>>,
-    params: CreateParams<TData>
+    params: Expressionable<CreateParams<TData>>
   ) => {
     return new Expression({
       create: collection,
@@ -587,10 +660,12 @@ class Query<
       ? TSchema['AccessProviders'][number]
       : string
   >(
-    params: CreateAccessProviderParams<
-      TAccessProviderName,
-      TSchema['Roles'],
-      TSchema['Databases']
+    params: Expressionable<
+      CreateAccessProviderParams<
+        TAccessProviderName,
+        TSchema['Roles'],
+        TSchema['Databases']
+      >
     >
   ) => {
     return new Expression({
@@ -602,7 +677,9 @@ class Query<
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/createcollection
    */
   CreateCollection = (
-    params: CreateCollectionParams<TSchema, keyof TSchema['Collections']>
+    params: Expressionable<
+      CreateCollectionParams<TSchema, keyof TSchema['Collections']>
+    >
   ) => {
     return new Expression({
       create_collection: wrap(params),
@@ -619,7 +696,7 @@ class Query<
       ? TSchema['Databases'][number]
       : string
   >(
-    params: CreateDatabaseParams<TDatabaseName>
+    params: Expressionable<CreateDatabaseParams<TDatabaseName>>
   ) => {
     return new Expression({
       create_database: wrap(params),
@@ -636,10 +713,12 @@ class Query<
       ? TSchema['Functions'][number]
       : string
   >(
-    params: CreateFunctionParams<
-      TFunctionName,
-      TSchema['Roles'],
-      TSchema['Databases']
+    params: Expressionable<
+      CreateFunctionParams<
+        TFunctionName,
+        TSchema['Roles'],
+        TSchema['Databases']
+      >
     >
   ) => {
     return new Expression({
@@ -657,10 +736,12 @@ class Query<
       ? TSchema['Indexes'][number]
       : string
   >(
-    params: CreateIndexParams<
-      TIndexName,
-      TSchema['Collections'],
-      TSchema['Databases']
+    params: Expressionable<
+      CreateIndexParams<
+        TIndexName,
+        TSchema['Collections'],
+        TSchema['Databases']
+      >
     >
   ) => {
     return new Expression({
@@ -668,8 +749,75 @@ class Query<
     });
   };
 
-  CreateKey = () => {
-    // TODO
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/createkey
+   */
+  CreateKey = (
+    params: Expressionable<
+      CreateKeyParams<TSchema['Roles'], TSchema['Databases']>
+    >
+  ) => {
+    return new Expression({
+      create_key: wrap(params),
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/createrole
+   */
+  CreateRole = <
+    TRoleName extends TSchema['Roles'] extends string[]
+      ? TSchema['Roles'][number]
+      : string = TSchema['Roles'] extends string[]
+      ? TSchema['Roles'][number]
+      : string
+  >(
+    params: Expressionable<CreateRoleParams<TRoleName>>
+  ) => {
+    return new Expression({
+      create_role: wrap(params),
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/credentials
+   */
+  Credentials = <
+    TDatabaseName extends TSchema['Databases'] extends string[]
+      ? TSchema['Databases'][number]
+      : string = TSchema['Databases'] extends string[]
+      ? TSchema['Databases'][number]
+      : string
+  >(
+    database?: Expression<DatabaseReturnType<TDatabaseName>>
+  ) => {
+    if (database) {
+      return new Expression({
+        credentials: database,
+      });
+    }
+
+    return new Expression({
+      credentials: null,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/currentidentity
+   */
+  CurrentIdentity = () => {
+    return new Expression({
+      current_identity: null,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/currenttoken
+   */
+  CurrentToken = () => {
+    return new Expression({
+      current_token: null,
+    });
   };
 
   /**
@@ -682,7 +830,7 @@ class Query<
       ? TSchema['Databases'][number]
       : string
   >(
-    name: TDatabaseName,
+    name: Expressionable<TDatabaseName>,
     database?: Expression<DatabaseReturnType<TDatabaseName>>
   ): Expression<DatabaseReturnType<TDatabaseName>> => {
     if (database) {
@@ -690,6 +838,101 @@ class Query<
     }
 
     return new Expression({ database: name });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/databases
+   */
+  Databases = <
+    TDatabaseName extends TSchema['Databases'] extends string[]
+      ? TSchema['Databases'][number]
+      : string = TSchema['Databases'] extends string[]
+      ? TSchema['Databases'][number]
+      : string
+  >(
+    database?: Expression<DatabaseReturnType<TDatabaseName>>
+  ) => {
+    if (database) {
+      return new Expression({
+        databases: database,
+      });
+    }
+
+    return new Expression({
+      databases: null,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/date
+   */
+  Date = (str: Expressionable<string>) => {
+    return new Expression({
+      date: str,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/dayofmonth
+   */
+  DayOfMonth = (timestamp: Expression<Timestamp>) => {
+    return new Expression({
+      day_of_month: timestamp,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/dayofweek
+   */
+  DayOfWeek = (timestamp: Expression<Timestamp>) => {
+    return new Expression({
+      day_of_week: timestamp,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/dayofyear
+   */
+  DayOfYear = (timestamp: Expression<Timestamp>) => {
+    return new Expression({
+      day_of_year: timestamp,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/degrees
+   */
+  Degrees = (value: Expressionable<number>) => {
+    return new Expression({
+      degrees: value,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/delete
+   */
+  Delete = (ref: Expression<RefReturnType>) => {
+    return new Expression({
+      delete: ref,
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/difference
+   */
+  Difference = (source: unknown[] | Expression, ...diff: unknown[]) => {
+    return new Expression({
+      difference: wrap([source, ...diff]),
+    });
+  };
+
+  /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/distinct
+   */
+  Distinct = (source: unknown[] | Expression) => {
+    return new Expression({
+      distinct: wrap(source),
+    });
   };
 
   /**
@@ -703,7 +946,7 @@ class Query<
       ? TSchema['Databases'][number]
       : string
   >(
-    name: TFunctionName,
+    name: Expressionable<TFunctionName>,
     database?: Expression<DatabaseReturnType<TDatabaseName>>
   ): Expression<FunctionReturnType<TFunctionName, TDatabaseName>> => {
     if (database) {
@@ -757,6 +1000,19 @@ class Query<
   };
 
   /**
+   * @see https://docs.fauna.com/fauna/current/api/fql/functions/ref
+   */
+  Ref = (
+    schemaRef: Expression,
+    documentId: Expressionable<string>
+  ): Expression<RefReturnType> => {
+    return new Expression({
+      id: documentId,
+      ref: schemaRef,
+    });
+  };
+
+  /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/role
    */
   Role = <
@@ -771,7 +1027,7 @@ class Query<
       ? TSchema['Databases'][number]
       : string
   >(
-    name: TRoleName,
+    name: Expressionable<TRoleName>,
     database?: Expression<DatabaseReturnType<TDatabaseName>>
   ): Expression<RoleReturnType<TRoleName, TDatabaseName>> => {
     if (database) {
@@ -816,17 +1072,22 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/time
    */
-  Time = (str: string): Expression<Timestamp> => {
+  Time = (str: Expressionable<string>): Expression<Timestamp> => {
     return new Expression({ time: str });
   };
 
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/var
    */
-  Var = (name: keyof TVariables) => {
-    return new Expression({
+  Var = <
+    TVariableName extends keyof TVariables = keyof TVariables,
+    TVariableValue extends TVariables[TVariableName] = TVariables[TVariableName]
+  >(
+    name: TVariableName
+  ): Expression<TVariableValue> => {
+    return new Expression(({
       var: name,
-    });
+    } as unknown) as TVariableValue);
   };
 }
 
