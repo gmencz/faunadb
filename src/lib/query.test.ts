@@ -1786,6 +1786,46 @@ describe('Functions', () => {
     `);
   });
 
+  test('Intersection', () => {
+    const q = new Query();
+
+    expect(q.Intersection(['A', 'B'], ['C', 'D'])).toMatchInlineSnapshot(`
+      Object {
+        "intersection": Array [
+          Array [
+            "A",
+            "B",
+          ],
+          Array [
+            "C",
+            "D",
+          ],
+        ],
+      }
+    `);
+
+    expect(q.Intersection(['A', 'B'], ['C', 'D', { a: true }]))
+      .toMatchInlineSnapshot(`
+      Object {
+        "intersection": Array [
+          Array [
+            "A",
+            "B",
+          ],
+          Array [
+            "C",
+            "D",
+            Object {
+              "object": Object {
+                "a": true,
+              },
+            },
+          ],
+        ],
+      }
+    `);
+  });
+
   test('Let & Var', () => {
     const q = new Query<
       QuerySchema,
@@ -1980,6 +2020,96 @@ describe('Functions', () => {
     expect(new Query().Now()).toMatchInlineSnapshot(`
       Object {
         "now": null,
+      }
+    `);
+  });
+
+  test('Paginate', () => {
+    const q = new Query<{ Collections: { Letters: {} } }>();
+
+    expect(
+      q.Paginate(
+        q.Documents(q.Collection(q.Var('collection'))),
+        q.Var('paginate_options')
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "paginate": Object {
+          "documents": Object {
+            "collection": Object {
+              "var": "collection",
+            },
+          },
+        },
+        "raw": Object {
+          "object": Object {
+            "var": "paginate_options",
+          },
+        },
+      }
+    `);
+
+    expect(q.Paginate(q.Documents(q.Collection('Letters')), { size: 3 }))
+      .toMatchInlineSnapshot(`
+      Object {
+        "paginate": Object {
+          "documents": Object {
+            "collection": "Letters",
+          },
+        },
+        "size": 3,
+      }
+    `);
+
+    expect(
+      q.Let(
+        {
+          collection: 'foo',
+          paginate_options: { size: 3, events: true },
+        },
+        q.Paginate(
+          q.Documents(q.Collection(q.Var('collection'))),
+          q.Select(['hi'], { hi: {} })
+        )
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "in": Object {
+          "paginate": Object {
+            "documents": Object {
+              "collection": Object {
+                "var": "collection",
+              },
+            },
+          },
+          "raw": Object {
+            "object": Object {
+              "from": Object {
+                "object": Object {
+                  "hi": Object {
+                    "object": Object {},
+                  },
+                },
+              },
+              "select": Array [
+                "hi",
+              ],
+            },
+          },
+        },
+        "let": Array [
+          Object {
+            "collection": "foo",
+          },
+          Object {
+            "paginate_options": Object {
+              "object": Object {
+                "events": true,
+                "size": 3,
+              },
+            },
+          },
+        ],
       }
     `);
   });
