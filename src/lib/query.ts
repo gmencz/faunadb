@@ -2399,7 +2399,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/update
    */
-  Update = (ref: Expression, params: OrExpression<UpdateParams>) => {
+  Update = (ref: Expression, params: O.AtLeast<OrExpression<UpdateParams>>) => {
     return new Expression({
       update: ref,
       params: wrap(params),

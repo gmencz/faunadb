@@ -1640,6 +1640,60 @@ describe('Functions', () => {
     `);
   });
 
+  test('Foreach', () => {
+    const q = new Query<{ Collections: { spellbooks: {} } }>();
+
+    expect(
+      q.Foreach(
+        q.Paginate(q.Match(q.Index('spells_by_element'), 'fire')),
+        q.Lambda(
+          'spell',
+          q.Update(q.Var('spell'), {
+            data: {
+              spellbook: q.Ref(
+                q.Collection('spellbooks'),
+                '181388642139243008'
+              ),
+            },
+          })
+        )
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "collection": Object {
+          "paginate": Object {
+            "match": Object {
+              "index": "spells_by_element",
+            },
+            "terms": "fire",
+          },
+        },
+        "foreach": Object {
+          "expr": Object {
+            "params": Object {
+              "object": Object {
+                "data": Object {
+                  "object": Object {
+                    "spellbook": Object {
+                      "id": "181388642139243008",
+                      "ref": Object {
+                        "collection": "spellbooks",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            "update": Object {
+              "var": "spell",
+            },
+          },
+          "lambda": "spell",
+        },
+      }
+    `);
+  });
+
   test('Format', () => {
     const q = new Query();
 
@@ -1737,6 +1791,878 @@ describe('Functions', () => {
     `);
   });
 
+  test('GT', () => {
+    const q = new Query();
+
+    expect(q.GT(1)).toMatchInlineSnapshot(`
+      Object {
+        "gt": 1,
+      }
+    `);
+
+    expect(q.GT(3, 2, 1)).toMatchInlineSnapshot(`
+      Object {
+        "gt": Array [
+          3,
+          2,
+          1,
+        ],
+      }
+    `);
+  });
+
+  test('GTE', () => {
+    const q = new Query();
+
+    expect(q.GTE(1)).toMatchInlineSnapshot(`
+      Object {
+        "gte": 1,
+      }
+    `);
+    expect(q.GTE(3, 2, 1)).toMatchInlineSnapshot(`
+      Object {
+        "gte": Array [
+          3,
+          2,
+          1,
+        ],
+      }
+    `);
+  });
+
+  test('Get', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Get(q.Ref(q.Collection('spells'), '181388642046968320')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "get": Object {
+          "id": "181388642046968320",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+      }
+    `);
+  });
+
+  test('HasCurrentIdentity', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.HasCurrentIdentity()).toMatchInlineSnapshot(`
+      Object {
+        "has_current_identity": null,
+      }
+    `);
+  });
+
+  test('HasCurrentToken', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.HasCurrentToken()).toMatchInlineSnapshot(`
+      Object {
+        "has_current_token": null,
+      }
+    `);
+  });
+
+  test('Hour', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Hour(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "hour": Object {
+          "time": "2019-04-29T12:51:17Z",
+        },
+      }
+    `);
+  });
+
+  test('Hypot', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Hypot(3.0)).toMatchInlineSnapshot(`
+      Object {
+        "hypot": 3,
+      }
+    `);
+    expect(q.Hypot(3.5, 5.5)).toMatchInlineSnapshot(`
+      Object {
+        "b": 5.5,
+        "hypot": 3.5,
+      }
+    `);
+  });
+
+  test('Identify', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Identify(
+        q.Ref(q.Collection('spells'), '181388642114077184'),
+        'abracadabra'
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "identify": Object {
+          "id": "181388642114077184",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+        "password": "abracadabra",
+      }
+    `);
+  });
+
+  test('If', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.If(true, 'was true', 'was false')).toMatchInlineSnapshot(`
+      Object {
+        "else": "was false",
+        "if": true,
+        "then": "was true",
+      }
+    `);
+  });
+
+  test('Index', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Index('spells_by_element')).toMatchInlineSnapshot(`
+      Object {
+        "index": "spells_by_element",
+      }
+    `);
+    expect(q.Index('spells_by_element', q.Database('child_db')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "index": "spells_by_element",
+        "scope": Object {
+          "database": "child_db",
+        },
+      }
+    `);
+  });
+
+  test('Indexes', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Paginate(q.Indexes())).toMatchInlineSnapshot(`
+      Object {
+        "paginate": Object {
+          "indexes": null,
+        },
+      }
+    `);
+  });
+
+  test('Insert', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Insert(
+        q.Ref(q.Collection('spells'), '181388642581742080'),
+        1,
+        'create',
+        {
+          data: {
+            name: "Mountain's Thunder",
+            cost: 10,
+            element: ['air', 'earth'],
+          },
+        }
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "action": "create",
+        "insert": Object {
+          "id": "181388642581742080",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+        "params": Object {
+          "object": Object {
+            "data": Object {
+              "object": Object {
+                "cost": 10,
+                "element": Array [
+                  "air",
+                  "earth",
+                ],
+                "name": "Mountain's Thunder",
+              },
+            },
+          },
+        },
+        "ts": 1,
+      }
+    `);
+  });
+
+  test('Intersection', () => {
+    const q = new Query();
+
+    expect(q.Intersection(['A', 'B'], ['C', 'D'])).toMatchInlineSnapshot(`
+      Object {
+        "intersection": Array [
+          Array [
+            "A",
+            "B",
+          ],
+          Array [
+            "C",
+            "D",
+          ],
+        ],
+      }
+    `);
+
+    expect(q.Intersection(['A', 'B'], ['C', 'D', { a: true }]))
+      .toMatchInlineSnapshot(`
+      Object {
+        "intersection": Array [
+          Array [
+            "A",
+            "B",
+          ],
+          Array [
+            "C",
+            "D",
+            Object {
+              "object": Object {
+                "a": true,
+              },
+            },
+          ],
+        ],
+      }
+    `);
+  });
+
+  test('IsArray', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsArray(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_array": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsArray({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_array": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsBoolean', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsBoolean(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_boolean": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsBoolean({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_boolean": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsBytes', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsBytes(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_bytes": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsBytes({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_bytes": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsCollection', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsCollection(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_collection": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsCollection({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_collection": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsCredentials', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsCredentials(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_credentials": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsCredentials({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_credentials": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsDatabase', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsDatabase(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_database": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsDatabase({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_database": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsDate', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsDate(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_date": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsDate({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_date": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsDoc', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsDoc(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_doc": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsDoc({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_doc": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsDouble', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsDouble(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_double": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsDouble({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_double": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsEmpty', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsEmpty(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_empty": Array [
+          "array",
+        ],
+      }
+    `);
+  });
+
+  test('IsFunction', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsFunction(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_function": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsFunction({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_function": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsIndex', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsIndex(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_index": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsIndex({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_index": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsInteger', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsInteger(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_integer": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsInteger({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_integer": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsKey', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsKey(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_key": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsKey({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_key": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsLambda', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsLambda(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_lambda": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsLambda({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_lambda": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsNonEmpty', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsNonEmpty(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_nonempty": Array [
+          "array",
+        ],
+      }
+    `);
+  });
+
+  test('IsNull', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsNull(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_null": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsNull({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_null": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsNumber', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsNumber(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_number": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsNumber({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_number": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsObject', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsObject(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_object": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsObject({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_object": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsRef', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsRef(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_ref": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsRef({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_ref": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsRole', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsRole(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_role": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsRole({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_role": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsSet', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsSet(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_set": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsSet({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_set": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsString', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsString(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_string": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsString({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_string": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsTimestamp', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsTimestamp(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_timestamp": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsTimestamp({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_timestamp": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('IsToken', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.IsToken(['array'])).toMatchInlineSnapshot(`
+      Object {
+        "is_token": Array [
+          "array",
+        ],
+      }
+    `);
+    expect(q.IsToken({ a: true })).toMatchInlineSnapshot(`
+      Object {
+        "is_token": Object {
+          "object": Object {
+            "a": true,
+          },
+        },
+      }
+    `);
+  });
+
+  test('Join', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Join(
+        q.Match(
+          q.Index('products_by_store'),
+          q.Ref(q.Collection('spells'), '301')
+        ),
+        q.Lambda(
+          ['name', 'description', 'price'],
+          q.Match(q.Index('inventory_by_product'), q.Var('name'))
+        )
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "join": Object {
+          "match": Object {
+            "index": "products_by_store",
+          },
+          "terms": Object {
+            "id": "301",
+            "ref": Object {
+              "collection": "spells",
+            },
+          },
+        },
+        "with": Object {
+          "expr": Object {
+            "match": Object {
+              "index": "inventory_by_product",
+            },
+            "terms": Object {
+              "var": "name",
+            },
+          },
+          "lambda": Array [
+            "name",
+            "description",
+            "price",
+          ],
+        },
+      }
+    `);
+  });
+
+  test('KeyFromSecret', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.KeyFromSecret('123')).toMatchInlineSnapshot(`
+      Object {
+        "key_from_secret": "123",
+      }
+    `);
+  });
+
+  test('Keys', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Keys()).toMatchInlineSnapshot(`
+      Object {
+        "keys": null,
+      }
+    `);
+
+    expect(q.Keys(q.Database('child_db'))).toMatchInlineSnapshot(`
+      Object {
+        "keys": Object {
+          "database": "child_db",
+        },
+      }
+    `);
+  });
+
+  test('LT', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.LT(1, 3)).toMatchInlineSnapshot(`
+      Object {
+        "lt": Array [
+          1,
+          3,
+        ],
+      }
+    `);
+    expect(q.LT(3)).toMatchInlineSnapshot(`
+      Object {
+        "lt": 3,
+      }
+    `);
+  });
+
+  test('LTE', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.LTE(1, 3)).toMatchInlineSnapshot(`
+      Object {
+        "lte": Array [
+          1,
+          3,
+        ],
+      }
+    `);
+    expect(q.LTE(1)).toMatchInlineSnapshot(`
+      Object {
+        "lte": 1,
+      }
+    `);
+  });
+
+  test('LTrim', () => {
+    // TODO
+  });
+
   test('Lambda', () => {
     const q = new Query();
 
@@ -1781,46 +2707,6 @@ describe('Functions', () => {
         "lambda": Array [
           "f",
           "l",
-        ],
-      }
-    `);
-  });
-
-  test('Intersection', () => {
-    const q = new Query();
-
-    expect(q.Intersection(['A', 'B'], ['C', 'D'])).toMatchInlineSnapshot(`
-      Object {
-        "intersection": Array [
-          Array [
-            "A",
-            "B",
-          ],
-          Array [
-            "C",
-            "D",
-          ],
-        ],
-      }
-    `);
-
-    expect(q.Intersection(['A', 'B'], ['C', 'D', { a: true }]))
-      .toMatchInlineSnapshot(`
-      Object {
-        "intersection": Array [
-          Array [
-            "A",
-            "B",
-          ],
-          Array [
-            "C",
-            "D",
-            Object {
-              "object": Object {
-                "a": true,
-              },
-            },
-          ],
         ],
       }
     `);
