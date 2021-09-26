@@ -17,7 +17,7 @@ type OrExpression<TValue = unknown> = Expression | TValue;
 type Normalizer = 'NFKCCaseFold' | 'NFC' | 'NFD' | 'NFKC' | 'NFKD';
 
 type CreateParams<TData extends unknown> = {
-  data: TData;
+  data?: OrExpression<TData>;
   credentials?: OrExpression<{ password: string } & Record<string, unknown>>;
   ttl?: Expression;
 };
@@ -520,7 +520,7 @@ class Query<
     TData extends TSchema['Collections'][TCollectionName] = TSchema['Collections'][TCollectionName]
   >(
     collection: OrExpression<TCollectionName>,
-    params: OrExpression<CreateParams<TData>>
+    params: OrExpression<CreateParams<TData> & Record<string, unknown>>
   ) => {
     return new Expression({
       create: collection,
@@ -1592,7 +1592,7 @@ class Query<
       : string
   >(
     index: OrExpression<TIndexName>,
-    searchTerms: unknown
+    searchTerms: unknown = []
   ) => {
     return new Expression({
       match: index,
@@ -1629,7 +1629,9 @@ class Query<
    */
   Merge = (
     object1: OrExpression<Record<string, unknown>>,
-    object2: OrExpression<Record<string, unknown>>[],
+    object2:
+      | OrExpression<Record<string, unknown>>
+      | OrExpression<Record<string, unknown>>[],
     customResolver?: Expression
   ) => {
     if (customResolver) {
@@ -1761,7 +1763,12 @@ class Query<
   Paginate = (input: Expression, params?: OrExpression<PaginateParams>) => {
     if (params) {
       if (params instanceof Expression) {
-        return new Expression({ paginate: input, raw: wrap(params.toJSON()) });
+        return new Expression({
+          paginate: input,
+          // @ts-expect-error because `toJSON` is a private field and we're accesing it
+          // from outside the class.
+          raw: wrap(params.toJSON()),
+        });
       }
 
       return new Expression({

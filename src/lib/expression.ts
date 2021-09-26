@@ -35,7 +35,8 @@ class Expression<T = unknown> {
     this.raw = raw;
   }
 
-  toJSON = () => {
+  // @ts-ignore
+  private toJSON = () => {
     return this.raw;
   };
 }

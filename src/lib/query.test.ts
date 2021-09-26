@@ -2660,7 +2660,13 @@ describe('Functions', () => {
   });
 
   test('LTrim', () => {
-    // TODO
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.LTrim(' Fire')).toMatchInlineSnapshot(`
+      Object {
+        "ltrim": " Fire",
+      }
+    `);
   });
 
   test('Lambda', () => {
@@ -2708,6 +2714,16 @@ describe('Functions', () => {
           "f",
           "l",
         ],
+      }
+    `);
+  });
+
+  test('Length', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Length('fire')).toMatchInlineSnapshot(`
+      Object {
+        "length": "fire",
       }
     `);
   });
@@ -2902,10 +2918,287 @@ describe('Functions', () => {
     `);
   });
 
+  test('Ln', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Ln(0.5)).toMatchInlineSnapshot(`
+      Object {
+        "ln": 0.5,
+      }
+    `);
+  });
+
+  test('Log', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Log(0.5)).toMatchInlineSnapshot(`
+      Object {
+        "log": 0.5,
+      }
+    `);
+  });
+
+  test('Login', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Login(q.Ref(q.Collection('spells'), '181388642114077184'), {
+        password: 'abracadabra',
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "login": Object {
+          "id": "181388642114077184",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+        "params": Object {
+          "object": Object {
+            "password": "abracadabra",
+          },
+        },
+      }
+    `);
+  });
+
+  test('Logout', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Logout(true)).toMatchInlineSnapshot(`
+      Object {
+        "logout": true,
+      }
+    `);
+  });
+
+  test('LowerCase', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.LowerCase('FiRe')).toMatchInlineSnapshot(`
+      Object {
+        "lowercase": "FiRe",
+      }
+    `);
+  });
+
+  test('Map', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Map([1, 2, 3], q.Lambda('x', q.Add(q.Var('x'), 1))))
+      .toMatchInlineSnapshot(`
+      Object {
+        "collection": Array [
+          1,
+          2,
+          3,
+        ],
+        "map": Object {
+          "expr": Object {
+            "add": Array [
+              Object {
+                "var": "x",
+              },
+              1,
+            ],
+          },
+          "lambda": "x",
+        },
+      }
+    `);
+  });
+
+  test('Match', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Match(q.Index('spells_by_element'), 'fire'))
+      .toMatchInlineSnapshot(`
+      Object {
+        "match": Object {
+          "index": "spells_by_element",
+        },
+        "terms": "fire",
+      }
+    `);
+  });
+
+  test('Max', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Max(1, 5, 22)).toMatchInlineSnapshot(`
+      Object {
+        "max": Array [
+          1,
+          5,
+          22,
+        ],
+      }
+    `);
+  });
+
+  test('Mean', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Mean([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
+      Object {
+        "mean": Array [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+        ],
+      }
+    `);
+  });
+
+  test('Merge', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Merge({ a: 'Apple', b: 'Banana' }, { x: 'width', y: 'height' }))
+      .toMatchInlineSnapshot(`
+      Object {
+        "merge": Object {
+          "object": Object {
+            "a": "Apple",
+            "b": "Banana",
+          },
+        },
+        "with": Object {
+          "object": Object {
+            "x": "width",
+            "y": "height",
+          },
+        },
+      }
+    `);
+  });
+
+  test('Min', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Min(1, 0, 3, -1)).toMatchInlineSnapshot(`
+      Object {
+        "min": Array [
+          1,
+          0,
+          3,
+          -1,
+        ],
+      }
+    `);
+  });
+
+  test('Minute', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Minute(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "minute": Object {
+          "time": "2019-04-29T12:51:17Z",
+        },
+      }
+    `);
+  });
+
+  test('Modulo', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Modulo(10, 5, 2)).toMatchInlineSnapshot(`
+      Object {
+        "modulo": Array [
+          10,
+          5,
+          2,
+        ],
+      }
+    `);
+  });
+
+  test('Month', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Month(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "month": Object {
+          "time": "2019-04-29T12:51:17Z",
+        },
+      }
+    `);
+  });
+
+  test('MoveDatabase', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.MoveDatabase(q.Database('a'), q.Database('b')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "move_database": Object {
+          "database": "a",
+        },
+        "to": Object {
+          "database": "b",
+        },
+      }
+    `);
+  });
+
+  test('Multiply', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Multiply(100, 10)).toMatchInlineSnapshot(`
+      Object {
+        "multiply": Array [
+          100,
+          10,
+        ],
+      }
+    `);
+  });
+
+  test('NewId', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.NewId()).toMatchInlineSnapshot(`
+      Object {
+        "new_id": null,
+      }
+    `);
+  });
+
+  test('Not', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Not(true)).toMatchInlineSnapshot(`
+      Object {
+        "not": true,
+      }
+    `);
+  });
+
   test('Now', () => {
     expect(new Query().Now()).toMatchInlineSnapshot(`
       Object {
         "now": null,
+      }
+    `);
+  });
+
+  test('Or', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Or(true, true, false)).toMatchInlineSnapshot(`
+      Object {
+        "or": Array [
+          true,
+          true,
+          false,
+        ],
       }
     `);
   });
@@ -3000,6 +3293,36 @@ describe('Functions', () => {
     `);
   });
 
+  test('Pow', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Pow(2, 3)).toMatchInlineSnapshot(`
+      Object {
+        "exp": 3,
+        "pow": 2,
+      }
+    `);
+  });
+
+  test('Prepend', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Prepend([1, 2, 3], [4, 5, 6])).toMatchInlineSnapshot(`
+      Object {
+        "collection": Array [
+          4,
+          5,
+          6,
+        ],
+        "prepend": Array [
+          1,
+          2,
+          3,
+        ],
+      }
+    `);
+  });
+
   test('Query', () => {
     const q = new Query();
 
@@ -3043,6 +3366,251 @@ describe('Functions', () => {
     `);
   });
 
+  test('RTrim', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.RTrim('Fire\n\n\t\t  ')).toMatchInlineSnapshot(`
+      Object {
+        "rtrim": "Fire
+
+      		  ",
+      }
+    `);
+  });
+
+  test('Radians', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Radians(2)).toMatchInlineSnapshot(`
+      Object {
+        "radians": 2,
+      }
+    `);
+  });
+
+  test('Range', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Range(q.Match(q.Index('letters')), 'F', 'M'))
+      .toMatchInlineSnapshot(`
+      Object {
+        "from": "F",
+        "range": Object {
+          "match": Object {
+            "index": "letters",
+          },
+          "terms": Array [],
+        },
+        "to": "M",
+      }
+    `);
+  });
+
+  test('Reduce', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Reduce(q.Lambda(['acc', 'value'], q.Add(q.Var('acc'), 1)), 0, [
+        1,
+        2,
+        3,
+        4,
+        5,
+      ])
+    ).toMatchInlineSnapshot(`
+      Object {
+        "arrayOrSet": Array [
+          1,
+          2,
+          3,
+          4,
+          5,
+        ],
+        "initial": 0,
+        "reduce": Object {
+          "expr": Object {
+            "add": Array [
+              Object {
+                "var": "acc",
+              },
+              1,
+            ],
+          },
+          "lambda": Array [
+            "acc",
+            "value",
+          ],
+        },
+      }
+    `);
+
+    expect(
+      q.Reduce(
+        q.Lambda(
+          ['acc', 'value'],
+          q.Let(
+            {
+              count: q.Add(q.Select('count', q.Var('acc')), 1),
+              total: q.Add(q.Select('total', q.Var('acc')), q.Var('value')),
+              min: q.Select('min', q.Var('acc')),
+              max: q.Select('max', q.Var('acc')),
+            },
+            {
+              count: q.Var('count'),
+              total: q.Var('total'),
+              min: q.If(
+                q.LTE(q.Var('value'), q.Var('min')),
+                q.Var('value'),
+                q.Var('min')
+              ),
+              max: q.If(
+                q.GTE(q.Var('value'), q.Var('max')),
+                q.Var('value'),
+                q.Var('max')
+              ),
+              avg: q.Divide(q.Var('total'), q.Var('count')),
+            }
+          )
+        ),
+        {
+          count: 0,
+          total: 0,
+          min: 999999,
+          max: -999999,
+          avg: 0,
+        },
+        [1, 2, 3, 4, 5]
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "arrayOrSet": Array [
+          1,
+          2,
+          3,
+          4,
+          5,
+        ],
+        "initial": Object {
+          "avg": 0,
+          "count": 0,
+          "max": -999999,
+          "min": 999999,
+          "total": 0,
+        },
+        "reduce": Object {
+          "expr": Object {
+            "in": Object {
+              "object": Object {
+                "avg": Object {
+                  "divide": Array [
+                    Object {
+                      "var": "total",
+                    },
+                    Object {
+                      "var": "count",
+                    },
+                  ],
+                },
+                "count": Object {
+                  "var": "count",
+                },
+                "max": Object {
+                  "else": Object {
+                    "var": "max",
+                  },
+                  "if": Object {
+                    "gte": Array [
+                      Object {
+                        "var": "value",
+                      },
+                      Object {
+                        "var": "max",
+                      },
+                    ],
+                  },
+                  "then": Object {
+                    "var": "value",
+                  },
+                },
+                "min": Object {
+                  "else": Object {
+                    "var": "min",
+                  },
+                  "if": Object {
+                    "lte": Array [
+                      Object {
+                        "var": "value",
+                      },
+                      Object {
+                        "var": "min",
+                      },
+                    ],
+                  },
+                  "then": Object {
+                    "var": "value",
+                  },
+                },
+                "total": Object {
+                  "var": "total",
+                },
+              },
+            },
+            "let": Array [
+              Object {
+                "count": Object {
+                  "add": Array [
+                    Object {
+                      "from": Object {
+                        "var": "acc",
+                      },
+                      "select": "count",
+                    },
+                    1,
+                  ],
+                },
+              },
+              Object {
+                "total": Object {
+                  "add": Array [
+                    Object {
+                      "from": Object {
+                        "var": "acc",
+                      },
+                      "select": "total",
+                    },
+                    Object {
+                      "var": "value",
+                    },
+                  ],
+                },
+              },
+              Object {
+                "min": Object {
+                  "from": Object {
+                    "var": "acc",
+                  },
+                  "select": "min",
+                },
+              },
+              Object {
+                "max": Object {
+                  "from": Object {
+                    "var": "acc",
+                  },
+                  "select": "max",
+                },
+              },
+            ],
+          },
+          "lambda": Array [
+            "acc",
+            "value",
+          ],
+        },
+      }
+    `);
+  });
+
   test('Ref', () => {
     const q = new Query<{ Collections: { spells: string } }>();
 
@@ -3053,6 +3621,138 @@ describe('Functions', () => {
         "ref": Object {
           "collection": "spells",
         },
+      }
+    `);
+  });
+
+  test('RegexEscape', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.RegexEscape('.Fa*[un]a{1,}')).toMatchInlineSnapshot(`
+      Object {
+        "regexescape": ".Fa*[un]a{1,}",
+      }
+    `);
+  });
+
+  test('Remove', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Remove(q.Ref(q.Collection('spells'), '181388642581742080'), 1, 'create')
+    ).toMatchInlineSnapshot(`
+      Object {
+        "action": "create",
+        "remove": Object {
+          "id": "181388642581742080",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+        "ts": 1,
+      }
+    `);
+  });
+
+  test('Repeat', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Repeat('Yes')).toMatchInlineSnapshot(`
+      Object {
+        "repeat": "Yes",
+      }
+    `);
+    expect(q.Repeat('Yes! ', 3)).toMatchInlineSnapshot(`
+      Object {
+        "number": 3,
+        "repeat": "Yes! ",
+      }
+    `);
+  });
+
+  test('Replace', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Replace(q.Ref(q.Collection('spells'), '181388642581742080'), {
+        data: {
+          name: "Mountain's Thunder",
+          element: ['air', 'earth'],
+        },
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "params": Object {
+          "object": Object {
+            "data": Object {
+              "object": Object {
+                "element": Array [
+                  "air",
+                  "earth",
+                ],
+                "name": "Mountain's Thunder",
+              },
+            },
+          },
+        },
+        "replace": Object {
+          "id": "181388642581742080",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+      }
+    `);
+  });
+
+  test('ReplaceStr', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ReplaceStr('One Fish Two Fish', 'Two', 'Blue'))
+      .toMatchInlineSnapshot(`
+      Object {
+        "find": "Two",
+        "replace": "Blue",
+        "replacestr": "One Fish Two Fish",
+      }
+    `);
+  });
+
+  test('ReplaceStrRegex', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ReplaceStrRegex('One Fish Two Fish', 'Two', 'Blue'))
+      .toMatchInlineSnapshot(`
+      Object {
+        "pattern": "Two",
+        "replace": "Blue",
+        "replacestrregex": "One Fish Two Fish",
+      }
+    `);
+    expect(q.ReplaceStrRegex('One Fish Two Fish', 'Two', 'Blue', true))
+      .toMatchInlineSnapshot(`
+      Object {
+        "first": true,
+        "pattern": "Two",
+        "replace": "Blue",
+        "replacestrregex": "One Fish Two Fish",
+      }
+    `);
+  });
+
+  test('Reverse', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Reverse(['a', 'b', 'c', 1, 2, 3])).toMatchInlineSnapshot(`
+      Object {
+        "reverse": Array [
+          "a",
+          "b",
+          "c",
+          1,
+          2,
+          3,
+        ],
       }
     `);
   });
@@ -3074,6 +3774,51 @@ describe('Functions', () => {
         "role": "moderator",
         "scope": Object {
           "database": "db1",
+        },
+      }
+    `);
+  });
+
+  test('Roles', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Roles()).toMatchInlineSnapshot(`
+      Object {
+        "roles": null,
+      }
+    `);
+    expect(q.Roles(q.Database('child_db'))).toMatchInlineSnapshot(`
+      Object {
+        "roles": Object {
+          "database": "child_db",
+        },
+      }
+    `);
+  });
+
+  test('Round', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Round(1234.5678)).toMatchInlineSnapshot(`
+      Object {
+        "round": 1234.5678,
+      }
+    `);
+    expect(q.Round(1234.5678, 2)).toMatchInlineSnapshot(`
+      Object {
+        "precision": 2,
+        "round": 1234.5678,
+      }
+    `);
+  });
+
+  test('Second', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Second(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "second": Object {
+          "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
@@ -3179,6 +3924,170 @@ describe('Functions', () => {
     `);
   });
 
+  test('Sign', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Sign(3)).toMatchInlineSnapshot(`
+      Object {
+        "sign": 3,
+      }
+    `);
+  });
+
+  test('Sin', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Sin(0.5)).toMatchInlineSnapshot(`
+      Object {
+        "sin": 0.5,
+      }
+    `);
+  });
+
+  test('Singleton', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Singleton(q.Ref(q.Collection('spells'), '233286601218720256')))
+      .toMatchInlineSnapshot(`
+      Object {
+        "singleton": Object {
+          "id": "233286601218720256",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+      }
+    `);
+  });
+
+  test('Sinh', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Sinh(0.5)).toMatchInlineSnapshot(`
+      Object {
+        "sinh": 0.5,
+      }
+    `);
+  });
+
+  test('Space', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Space(20)).toMatchInlineSnapshot(`
+      Object {
+        "space": 20,
+      }
+    `);
+  });
+
+  test('Sqrt', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Sqrt(16)).toMatchInlineSnapshot(`
+      Object {
+        "sqrt": 16,
+      }
+    `);
+  });
+
+  test('StartsWith', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.StartsWith('Fauna', 'F')).toMatchInlineSnapshot(`
+      Object {
+        "search": "F",
+        "startswith": "Fauna",
+      }
+    `);
+  });
+
+  test('SubString', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.SubString('ABCDEFGHIJK', -4)).toMatchInlineSnapshot(`
+      Object {
+        "start": -4,
+        "substring": "ABCDEFGHIJK",
+      }
+    `);
+    expect(q.SubString('ABCDEFGHIJK', 2, 3)).toMatchInlineSnapshot(`
+      Object {
+        "length": 3,
+        "start": 2,
+        "substring": "ABCDEFGHIJK",
+      }
+    `);
+  });
+
+  test('Subtract', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Subtract(100, 10)).toMatchInlineSnapshot(`
+      Object {
+        "subtract": Array [
+          100,
+          10,
+        ],
+      }
+    `);
+  });
+
+  test('Sum', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
+      Object {
+        "sum": Array [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+        ],
+      }
+    `);
+  });
+
+  test('Take', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Take(2, [1, 2, 3])).toMatchInlineSnapshot(`
+      Object {
+        "collection": Array [
+          1,
+          2,
+          3,
+        ],
+        "take": 2,
+      }
+    `);
+  });
+
+  test('Tan', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Tan(0.5)).toMatchInlineSnapshot(`
+      Object {
+        "tan": 0.5,
+      }
+    `);
+  });
+
+  test('Tanh', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Tanh(0.5)).toMatchInlineSnapshot(`
+      Object {
+        "tanh": 0.5,
+      }
+    `);
+  });
+
   test('Time', () => {
     const q = new Query();
 
@@ -3191,6 +4100,467 @@ describe('Functions', () => {
     expect(q.Time('now')).toMatchInlineSnapshot(`
       Object {
         "time": "now",
+      }
+    `);
+  });
+
+  test('TimeAdd', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.TimeAdd(q.Epoch(0, 'second'), 1, 'day')).toMatchInlineSnapshot(`
+      Object {
+        "offset": 1,
+        "time_add": Object {
+          "epoch": 0,
+          "unit": "second",
+        },
+        "unit": "day",
+      }
+    `);
+  });
+
+  test('TimeDiff', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Let(
+        {
+          start: q.Time('1970-01-01T00:00:00+00:00'),
+          finish: q.Time('2020-07-06T12:34:56.789Z'),
+        },
+        [
+          q.TimeDiff(q.Var('start'), q.Var('finish'), 'days'),
+          q.TimeDiff(q.Var('start'), q.Var('finish'), 'half days'),
+          q.TimeDiff(q.Var('start'), q.Var('finish'), 'hours'),
+          q.TimeDiff(q.Var('start'), q.Var('finish'), 'minutes'),
+          q.TimeDiff(q.Var('start'), q.Var('finish'), 'seconds'),
+          q.TimeDiff(q.Var('start'), q.Var('finish'), 'milliseconds'),
+        ]
+      )
+    ).toMatchInlineSnapshot(`
+      Object {
+        "in": Array [
+          Object {
+            "other": Object {
+              "var": "finish",
+            },
+            "time_diff": Object {
+              "var": "start",
+            },
+            "unit": "days",
+          },
+          Object {
+            "other": Object {
+              "var": "finish",
+            },
+            "time_diff": Object {
+              "var": "start",
+            },
+            "unit": "half days",
+          },
+          Object {
+            "other": Object {
+              "var": "finish",
+            },
+            "time_diff": Object {
+              "var": "start",
+            },
+            "unit": "hours",
+          },
+          Object {
+            "other": Object {
+              "var": "finish",
+            },
+            "time_diff": Object {
+              "var": "start",
+            },
+            "unit": "minutes",
+          },
+          Object {
+            "other": Object {
+              "var": "finish",
+            },
+            "time_diff": Object {
+              "var": "start",
+            },
+            "unit": "seconds",
+          },
+          Object {
+            "other": Object {
+              "var": "finish",
+            },
+            "time_diff": Object {
+              "var": "start",
+            },
+            "unit": "milliseconds",
+          },
+        ],
+        "let": Array [
+          Object {
+            "start": Object {
+              "time": "1970-01-01T00:00:00+00:00",
+            },
+          },
+          Object {
+            "finish": Object {
+              "time": "2020-07-06T12:34:56.789Z",
+            },
+          },
+        ],
+      }
+    `);
+  });
+
+  test('TimeSubtract', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.TimeSubtract(q.Now(), 5, 'seconds')).toMatchInlineSnapshot(`
+      Object {
+        "offset": 5,
+        "time_subtract": Object {
+          "now": null,
+        },
+        "unit": "seconds",
+      }
+    `);
+  });
+
+  test('TitleCase', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.TitleCase('JOHN the FiReMan')).toMatchInlineSnapshot(`
+      Object {
+        "titlecase": "JOHN the FiReMan",
+      }
+    `);
+  });
+
+  test('ToArray', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToArray({ name: 'Dennis', age: 37 })).toMatchInlineSnapshot(`
+      Object {
+        "to_array": Object {
+          "object": Object {
+            "age": 37,
+            "name": "Dennis",
+          },
+        },
+      }
+    `);
+  });
+
+  test('ToDate', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToDate('2018-06-06')).toMatchInlineSnapshot(`
+      Object {
+        "to_date": "2018-06-06",
+      }
+    `);
+  });
+
+  test('ToDouble', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToDouble(1234.5678)).toMatchInlineSnapshot(`
+      Object {
+        "to_double": 1234.5678,
+      }
+    `);
+  });
+
+  test('ToInteger', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToInteger(1234.5678)).toMatchInlineSnapshot(`
+      Object {
+        "to_integer": 1234.5678,
+      }
+    `);
+  });
+
+  test('ToMicros', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToMicros(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
+      Object {
+        "to_micros": Object {
+          "epoch": 1,
+          "unit": "second",
+        },
+      }
+    `);
+  });
+
+  test('ToMillis', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToMillis(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
+      Object {
+        "to_millis": Object {
+          "epoch": 1,
+          "unit": "second",
+        },
+      }
+    `);
+  });
+
+  test('ToNumber', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToNumber(1234.5678)).toMatchInlineSnapshot(`
+      Object {
+        "to_number": 1234.5678,
+      }
+    `);
+  });
+
+  test('ToObject', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.ToObject([
+        ['name', 'Dennis'],
+        ['age', 37],
+      ])
+    ).toMatchInlineSnapshot(`
+      Object {
+        "to_object": Array [
+          Array [
+            "name",
+            "Dennis",
+          ],
+          Array [
+            "age",
+            37,
+          ],
+        ],
+      }
+    `);
+  });
+
+  test('ToSeconds', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToSeconds(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
+      Object {
+        "to_seconds": Object {
+          "epoch": 1,
+          "unit": "second",
+        },
+      }
+    `);
+  });
+
+  test('ToString', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToString(1234.5678)).toMatchInlineSnapshot(`
+      Object {
+        "to_string": 1234.5678,
+      }
+    `);
+  });
+
+  test('ToTime', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.ToTime('2020-07-06T12:34:56.789Z')).toMatchInlineSnapshot(`
+      Object {
+        "to_time": "2020-07-06T12:34:56.789Z",
+      }
+    `);
+  });
+
+  test('Tokens', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Create(q.Tokens(), { instance: q.Ref(q.Collection('spells'), '1') })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "create": Object {
+          "tokens": null,
+        },
+        "params": Object {
+          "object": Object {
+            "instance": Object {
+              "id": "1",
+              "ref": Object {
+                "collection": "spells",
+              },
+            },
+          },
+        },
+      }
+    `);
+  });
+
+  test('Trim', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
+      Object {
+        "trim": "    Fire    ",
+      }
+    `);
+  });
+
+  test('Trunc', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Trunc(1234.5678)).toMatchInlineSnapshot(`
+      Object {
+        "trunc": 1234.5678,
+      }
+    `);
+    expect(q.Trunc(1234, -2)).toMatchInlineSnapshot(`
+      Object {
+        "precision": -2,
+        "trunc": 1234,
+      }
+    `);
+  });
+
+  test('Trim', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
+      Object {
+        "trim": "    Fire    ",
+      }
+    `);
+  });
+
+  test('Union', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect([
+      q.Union(['A', 'B'], ['C', 'D']),
+      q.Union(['A', 'B'], ['B', 'C']),
+      q.Union(['A', 'B', 'C'], ['B', 'C'], ['B', 'C', 'D']),
+      q.Union(['A', 'B', 'C'], ['B', 'B'], ['B']),
+    ]).toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "union": Array [
+            Array [
+              "A",
+              "B",
+            ],
+            Array [
+              "C",
+              "D",
+            ],
+          ],
+        },
+        Object {
+          "union": Array [
+            Array [
+              "A",
+              "B",
+            ],
+            Array [
+              "B",
+              "C",
+            ],
+          ],
+        },
+        Object {
+          "union": Array [
+            Array [
+              "A",
+              "B",
+              "C",
+            ],
+            Array [
+              "B",
+              "C",
+            ],
+            Array [
+              "B",
+              "C",
+              "D",
+            ],
+          ],
+        },
+        Object {
+          "union": Array [
+            Array [
+              "A",
+              "B",
+              "C",
+            ],
+            Array [
+              "B",
+              "B",
+            ],
+            Array [
+              "B",
+            ],
+          ],
+        },
+      ]
+    `);
+  });
+
+  test('Update', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(
+      q.Update(q.Ref(q.Collection('spells'), '181388642581742080'), {
+        data: {
+          name: "Mountain's Thunder",
+          cost: null,
+        },
+      })
+    ).toMatchInlineSnapshot(`
+      Object {
+        "params": Object {
+          "object": Object {
+            "data": Object {
+              "object": Object {
+                "cost": null,
+                "name": "Mountain's Thunder",
+              },
+            },
+          },
+        },
+        "update": Object {
+          "id": "181388642581742080",
+          "ref": Object {
+            "collection": "spells",
+          },
+        },
+      }
+    `);
+  });
+
+  test('UpperCase', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect([q.UpperCase('FiRe'), q.UpperCase('Fire And FireMan')])
+      .toMatchInlineSnapshot(`
+      Array [
+        Object {
+          "uppercase": "FiRe",
+        },
+        Object {
+          "uppercase": "Fire And FireMan",
+        },
+      ]
+    `);
+  });
+
+  test('Year', () => {
+    const q = new Query<{ Collections: { spells: {} } }>();
+
+    expect(q.Year(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+      Object {
+        "year": Object {
+          "time": "2019-04-29T12:51:17Z",
+        },
       }
     `);
   });
