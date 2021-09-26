@@ -1,20 +1,19 @@
 import { wrap } from './expression';
 
-describe('Expressions', () => {
-  test('wrap() wraps an object as an expression', () => {
-    expect(
-      wrap({
-        testValue1: '1',
-        testValue2: '2',
-        testValue3: {
-          idk: 'yes',
-          nested: {
-            value: '3',
-          },
+test('wrap() wraps an object as an expression', () => {
+  expect(
+    wrap({
+      testValue1: '1',
+      testValue2: '2',
+      testValue3: {
+        idk: 'yes',
+        nested: {
+          value: '3',
         },
-        testValue4: [2, 5],
-      })
-    ).toMatchInlineSnapshot(`
+      },
+      testValue4: [2, 5],
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "object": Object {
           "testValue1": "1",
@@ -37,13 +36,13 @@ describe('Expressions', () => {
       }
     `);
 
-    expect(
-      wrap({
-        testValue: { var: 'testVar' },
-        testValue2: { var: 'testVar2' },
-        testValue3: { v: { var: 'testVar3' } },
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    wrap({
+      testValue: { var: 'testVar' },
+      testValue2: { var: 'testVar2' },
+      testValue3: { v: { var: 'testVar3' } },
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "object": Object {
           "testValue": Object {
@@ -69,7 +68,7 @@ describe('Expressions', () => {
       }
     `);
 
-    expect(wrap([2, 5, { a: true }])).toMatchInlineSnapshot(`
+  expect(wrap([2, 5, { a: true }])).toMatchInlineSnapshot(`
       Array [
         2,
         5,
@@ -80,5 +79,4 @@ describe('Expressions', () => {
         },
       ]
     `);
-  });
 });

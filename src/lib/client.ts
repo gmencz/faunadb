@@ -1,3 +1,7 @@
+import { O } from 'ts-toolbelt';
+import { wrap } from './expression';
+import { QueryError } from './errors';
+
 interface ClientConfig {
   /**
    * Opaque bearer token, associated with a token document or key document
@@ -13,55 +17,73 @@ interface ClientConfig {
    * one of the region groups's URL. Learn more about region groups here: https://docs.fauna.com/fauna/current/api/fql/region_groups.
    * Defaults to the classic region group URL `https://db.fauna.com`.
    */
-  url?: RegionGroupURL | string;
+  url: RegionGroupURL | string;
 
   /**
-   * A custom fetch implementation.
+   * How requests will be made to the FaunaDB URL. In the following example, `fetch` is globally
+   * available:
+   * ```ts
+   * const config: ClientConfig = {
+   *   // Other config...
+   *   fetch: (input, init) => {
+   *     return fetch(input, init);
+   *   }
+   * }
+   * ```
+   * This function must return a Promise which resolves to a Response compatible with the
+   * Fetch API (https://developer.mozilla.org/en-US/docs/Web/API/Response).
    */
-  fetch?: (input: RequestInfo, init?: RequestInit) => Promise<Response>;
+  fetch: (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 }
 
 enum RegionGroupURL {
-  US = 'https://db.us.fauna.com',
-  EU = 'https://db.eu.fauna.com',
-  CLASSIC = 'https://db.fauna.com',
+  US = 'https://db.us.fauna.com/',
+  EU = 'https://db.eu.fauna.com/',
+  CLASSIC = 'https://db.fauna.com/',
 }
-
-const defaultFetch: ClientConfig['fetch'] = (input, init) => {
-  let signal: AbortSignal | null = null;
-  if (init?.signal) {
-    signal = init?.signal;
-    delete init?.signal;
-  }
-
-  const abortPromise = new Promise<never>((_resolve, reject) => {
-    if (signal) {
-      signal.onabort = () => reject('aborted');
-    }
-  });
-
-  return Promise.race([abortPromise, fetch(input, init)]);
-};
 
 class Client {
   private config: ClientConfig;
 
-  constructor(config: ClientConfig) {
-    const configURL = config.url ?? RegionGroupURL.CLASSIC;
-    const configFetch = config.fetch ?? defaultFetch;
-
+  constructor(config: O.Optional<ClientConfig, 'url'>) {
     this.config = {
       ...config,
-      url: configURL,
-      fetch: configFetch,
+      url: config.url ?? RegionGroupURL.CLASSIC,
     };
   }
 
-  log = () => {
-    console.log(this.config);
-  };
+  query = <TResource = unknown>(expression: unknown) => {
+    // For some reason, if we use async/await syntax, the bundle size increases by like
+    // 3KB and this is not acceptable.
+    // Solution: Use something like https://github.com/huozhi/bunchee for bundling
+    // and remove TSDX. This will give us more control over everything.
+    return new Promise<TResource>((resolve, reject) => {
+      this.config
+        .fetch(this.config.url, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${this.config.secret}`,
+          },
+          body: JSON.stringify(wrap(expression)),
+        })
+        .then(response => {
+          if (!response.ok) {
+            return response
+              .json()
+              .then((json: { errors: QueryError['rawErrors'] }) => {
+                const error = json.errors[0];
+                return reject(
+                  new QueryError(error.code, error.description, json.errors)
+                );
+              });
+          }
 
-  // query: (expression: Expression) => {};
+          return response.json().then((json: { resource: TResource }) => {
+            return resolve(json.resource);
+          });
+        });
+    });
+  };
 }
 
 export { Client, RegionGroupURL };

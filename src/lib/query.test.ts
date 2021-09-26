@@ -1,61 +1,60 @@
 import { Query, QuerySchema } from './query';
 
-describe('Functions', () => {
-  test('Abort', () => {
-    expect(new Query().Abort('Something went wrong')).toMatchInlineSnapshot(`
+test('Abort', () => {
+  expect(new Query().Abort('Something went wrong')).toMatchInlineSnapshot(`
       Object {
         "abort": "Something went wrong",
       }
     `);
-  });
+});
 
-  test('Abs', () => {
-    expect(new Query().Abs(-100)).toMatchInlineSnapshot(`
+test('Abs', () => {
+  expect(new Query().Abs(-100)).toMatchInlineSnapshot(`
       Object {
         "abs": -100,
       }
     `);
-  });
+});
 
-  test('AccessProvider', () => {
-    expect(new Query().AccessProvider('Auth0-myapp')).toMatchInlineSnapshot(`
+test('AccessProvider', () => {
+  expect(new Query().AccessProvider('Auth0-myapp')).toMatchInlineSnapshot(`
       Object {
         "access_provider": "Auth0-myapp",
       }
     `);
-  });
+});
 
-  test('AccessProviders', () => {
-    const q = new Query<{
-      Databases: ['child1'];
-    }>();
+test('AccessProviders', () => {
+  const q = new Query<{
+    Databases: ['child1'];
+  }>();
 
-    expect(q.AccessProviders()).toMatchInlineSnapshot(`
+  expect(q.AccessProviders()).toMatchInlineSnapshot(`
       Object {
         "access_providers": null,
       }
     `);
 
-    // TODO: Also test with a child database param.
-    expect(q.AccessProviders(q.Database('child1'))).toMatchInlineSnapshot(`
+  // TODO: Also test with a child database param.
+  expect(q.AccessProviders(q.Database('child1'))).toMatchInlineSnapshot(`
       Object {
         "access_providers": Object {
           "database": "child1",
         },
       }
     `);
-  });
+});
 
-  test('Acos', () => {
-    expect(new Query().Acos(0.5)).toMatchInlineSnapshot(`
+test('Acos', () => {
+  expect(new Query().Acos(0.5)).toMatchInlineSnapshot(`
       Object {
         "acos": 0.5,
       }
     `);
-  });
+});
 
-  test('Add', () => {
-    expect(new Query().Add(1, 3)).toMatchInlineSnapshot(`
+test('Add', () => {
+  expect(new Query().Add(1, 3)).toMatchInlineSnapshot(`
       Object {
         "add": Array [
           1,
@@ -64,15 +63,15 @@ describe('Functions', () => {
       }
     `);
 
-    expect(new Query().Add(2)).toMatchInlineSnapshot(`
+  expect(new Query().Add(2)).toMatchInlineSnapshot(`
       Object {
         "add": 2,
       }
     `);
-  });
+});
 
-  test('All', () => {
-    expect(new Query().All(1, 3)).toMatchInlineSnapshot(`
+test('All', () => {
+  expect(new Query().All(1, 3)).toMatchInlineSnapshot(`
       Object {
         "all": Array [
           1,
@@ -81,15 +80,15 @@ describe('Functions', () => {
       }
     `);
 
-    expect(new Query().All(2)).toMatchInlineSnapshot(`
+  expect(new Query().All(2)).toMatchInlineSnapshot(`
       Object {
         "all": 2,
       }
     `);
-  });
+});
 
-  test('And', () => {
-    expect(new Query().And(true, false)).toMatchInlineSnapshot(`
+test('And', () => {
+  expect(new Query().And(true, false)).toMatchInlineSnapshot(`
       Object {
         "and": Array [
           true,
@@ -98,15 +97,15 @@ describe('Functions', () => {
       }
     `);
 
-    expect(new Query().And(true)).toMatchInlineSnapshot(`
+  expect(new Query().And(true)).toMatchInlineSnapshot(`
       Object {
         "and": true,
       }
     `);
-  });
+});
 
-  test('Any', () => {
-    expect(new Query().Any(true, false)).toMatchInlineSnapshot(`
+test('Any', () => {
+  expect(new Query().Any(true, false)).toMatchInlineSnapshot(`
       Object {
         "any": Array [
           true,
@@ -115,15 +114,15 @@ describe('Functions', () => {
       }
     `);
 
-    expect(new Query().Any(true)).toMatchInlineSnapshot(`
+  expect(new Query().Any(true)).toMatchInlineSnapshot(`
       Object {
         "any": true,
       }
     `);
-  });
+});
 
-  test('Append', () => {
-    expect(new Query().Append([1, 2, 3], [2, 2])).toMatchInlineSnapshot(`
+test('Append', () => {
+  expect(new Query().Append([1, 2, 3], [2, 2])).toMatchInlineSnapshot(`
       Object {
         "append": Array [
           1,
@@ -137,9 +136,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      new Query().Append([1, 2, 3, { test: true }], [2, 2, { test2: true }])
-    ).toMatchInlineSnapshot(`
+  expect(new Query().Append([1, 2, 3, { test: true }], [2, 2, { test2: true }]))
+    .toMatchInlineSnapshot(`
       Object {
         "append": Array [
           1,
@@ -162,20 +160,20 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Asin', () => {
-    expect(new Query().Asin(0.5)).toMatchInlineSnapshot(`
+test('Asin', () => {
+  expect(new Query().Asin(0.5)).toMatchInlineSnapshot(`
       Object {
         "asin": 0.5,
       }
     `);
-  });
+});
 
-  test('At', () => {
-    const q = new Query();
+test('At', () => {
+  const q = new Query();
 
-    expect(q.At(q.Now(), { b: 7 })).toMatchInlineSnapshot(`
+  expect(q.At(q.Now(), { b: 7 })).toMatchInlineSnapshot(`
       Object {
         "at": Object {
           "now": null,
@@ -188,19 +186,19 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.At(
-        q.Time('1970-01-01T00:00:00+00:00'),
-        q.Let(
-          {
-            num: 1,
-          },
-          {
-            result: q.Var('num'),
-          }
-        )
+  expect(
+    q.At(
+      q.Time('1970-01-01T00:00:00+00:00'),
+      q.Let(
+        {
+          num: 1,
+        },
+        {
+          result: q.Var('num'),
+        }
       )
-    ).toMatchInlineSnapshot(`
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "at": Object {
           "time": "1970-01-01T00:00:00+00:00",
@@ -221,26 +219,26 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Atan', () => {
-    expect(new Query().Atan(0.5)).toMatchInlineSnapshot(`
+test('Atan', () => {
+  expect(new Query().Atan(0.5)).toMatchInlineSnapshot(`
       Object {
         "atan": 0.5,
       }
     `);
-  });
+});
 
-  test('BitAnd', () => {
-    const q = new Query();
+test('BitAnd', () => {
+  const q = new Query();
 
-    expect(q.BitAnd(7)).toMatchInlineSnapshot(`
+  expect(q.BitAnd(7)).toMatchInlineSnapshot(`
       Object {
         "bitand": 7,
       }
     `);
 
-    expect(q.BitAnd(7, 3)).toMatchInlineSnapshot(`
+  expect(q.BitAnd(7, 3)).toMatchInlineSnapshot(`
       Object {
         "bitand": Array [
           7,
@@ -248,28 +246,28 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('BitNot', () => {
-    const q = new Query();
+test('BitNot', () => {
+  const q = new Query();
 
-    expect(q.BitNot(7)).toMatchInlineSnapshot(`
+  expect(q.BitNot(7)).toMatchInlineSnapshot(`
       Object {
         "bitnot": 7,
       }
     `);
-  });
+});
 
-  test('BitOr', () => {
-    const q = new Query();
+test('BitOr', () => {
+  const q = new Query();
 
-    expect(q.BitOr(7)).toMatchInlineSnapshot(`
+  expect(q.BitOr(7)).toMatchInlineSnapshot(`
       Object {
         "bitor": 7,
       }
     `);
 
-    expect(q.BitOr(7, 3)).toMatchInlineSnapshot(`
+  expect(q.BitOr(7, 3)).toMatchInlineSnapshot(`
       Object {
         "bitor": Array [
           7,
@@ -277,18 +275,18 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('BitXor', () => {
-    const q = new Query();
+test('BitXor', () => {
+  const q = new Query();
 
-    expect(q.BitXor(7)).toMatchInlineSnapshot(`
+  expect(q.BitXor(7)).toMatchInlineSnapshot(`
       Object {
         "bitxor": 7,
       }
     `);
 
-    expect(q.BitXor(7, 3)).toMatchInlineSnapshot(`
+  expect(q.BitXor(7, 3)).toMatchInlineSnapshot(`
       Object {
         "bitxor": Array [
           7,
@@ -296,19 +294,19 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Call', () => {
-    const q = new Query<{
-      Databases: ['child1', 'child2'];
-      Collections: {};
-      Functions: {
-        add: [number, number];
-        increment: number;
-      };
-    }>();
+test('Call', () => {
+  const q = new Query<{
+    Databases: ['child1', 'child2'];
+    Collections: {};
+    Functions: {
+      add: [number, number];
+      increment: number;
+    };
+  }>();
 
-    expect(q.Call('add', [2, 3])).toMatchInlineSnapshot(`
+  expect(q.Call('add', [2, 3])).toMatchInlineSnapshot(`
       Object {
         "arguments": Array [
           2,
@@ -318,7 +316,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Call(q.Function('add'), [2, 3])).toMatchInlineSnapshot(`
+  expect(q.Call(q.Function('add'), [2, 3])).toMatchInlineSnapshot(`
       Object {
         "arguments": Array [
           2,
@@ -330,8 +328,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Call(q.Function('add', q.Database('child1')), [2, 3]))
-      .toMatchInlineSnapshot(`
+  expect(q.Call(q.Function('add', q.Database('child1')), [2, 3]))
+    .toMatchInlineSnapshot(`
       Object {
         "arguments": Array [
           2,
@@ -346,12 +344,12 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Call(q.Function('add', q.Database('child1', q.Database('child2'))), [
-        2,
-        3,
-      ])
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Call(q.Function('add', q.Database('child1', q.Database('child2'))), [
+      2,
+      3,
+    ])
+  ).toMatchInlineSnapshot(`
       Object {
         "arguments": Array [
           2,
@@ -369,14 +367,14 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Call('increment', 2)).toMatchInlineSnapshot(`
+  expect(q.Call('increment', 2)).toMatchInlineSnapshot(`
       Object {
         "arguments": 2,
         "call": "increment",
       }
     `);
 
-    expect(q.Call(q.Function('increment'), 2)).toMatchInlineSnapshot(`
+  expect(q.Call(q.Function('increment'), 2)).toMatchInlineSnapshot(`
       Object {
         "arguments": 2,
         "call": Object {
@@ -384,49 +382,49 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Casefold', () => {
-    const q = new Query();
+test('Casefold', () => {
+  const q = new Query();
 
-    expect(q.Casefold('Hen Wen')).toMatchInlineSnapshot(`
+  expect(q.Casefold('Hen Wen')).toMatchInlineSnapshot(`
       Object {
         "casefold": "Hen Wen",
       }
     `);
 
-    expect(q.Casefold('Hen Wen', 'NFKD')).toMatchInlineSnapshot(`
+  expect(q.Casefold('Hen Wen', 'NFKD')).toMatchInlineSnapshot(`
       Object {
         "casefold": "Hen Wen",
         "normalizer": "NFKD",
       }
     `);
-  });
+});
 
-  test('Ceil', () => {
-    expect(new Query().Ceil(7.0)).toMatchInlineSnapshot(`
+test('Ceil', () => {
+  expect(new Query().Ceil(7.0)).toMatchInlineSnapshot(`
       Object {
         "ceil": 7,
       }
     `);
-  });
+});
 
-  test('Collection', () => {
-    const q = new Query<{
-      Databases: ['child1'];
-      Functions: {};
-      Collections: {
-        users: {};
-      };
-    }>();
+test('Collection', () => {
+  const q = new Query<{
+    Databases: ['child1'];
+    Functions: {};
+    Collections: {
+      users: {};
+    };
+  }>();
 
-    expect(q.Collection('users')).toMatchInlineSnapshot(`
+  expect(q.Collection('users')).toMatchInlineSnapshot(`
       Object {
         "collection": "users",
       }
     `);
 
-    expect(q.Collection('users', q.Database('child1'))).toMatchInlineSnapshot(`
+  expect(q.Collection('users', q.Database('child1'))).toMatchInlineSnapshot(`
       Object {
         "collection": "users",
         "scope": Object {
@@ -434,36 +432,36 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Collections', () => {
-    const q = new Query<{
-      Databases: ['child1'];
-      Functions: {};
-      Collections: {
-        users: {};
-      };
-    }>();
+test('Collections', () => {
+  const q = new Query<{
+    Databases: ['child1'];
+    Functions: {};
+    Collections: {
+      users: {};
+    };
+  }>();
 
-    expect(q.Collections()).toMatchInlineSnapshot(`
+  expect(q.Collections()).toMatchInlineSnapshot(`
       Object {
         "collections": null,
       }
     `);
 
-    expect(q.Collections(q.Database('child1'))).toMatchInlineSnapshot(`
+  expect(q.Collections(q.Database('child1'))).toMatchInlineSnapshot(`
       Object {
         "collections": Object {
           "database": "child1",
         },
       }
     `);
-  });
+});
 
-  test('Concat', () => {
-    const q = new Query();
+test('Concat', () => {
+  const q = new Query();
 
-    expect(q.Concat(['Hen', 'Wen'], ' ')).toMatchInlineSnapshot(`
+  expect(q.Concat(['Hen', 'Wen'], ' ')).toMatchInlineSnapshot(`
       Object {
         "concat": Array [
           "Hen",
@@ -473,7 +471,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Concat(['Hen', 'Wen'])).toMatchInlineSnapshot(`
+  expect(q.Concat(['Hen', 'Wen'])).toMatchInlineSnapshot(`
       Object {
         "concat": Array [
           "Hen",
@@ -481,18 +479,18 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('ContainsField', () => {
-    const q = new Query();
+test('ContainsField', () => {
+  const q = new Query();
 
-    expect(
-      q.ContainsField('a', {
-        a: 1,
-        b: 2,
-        c: 3,
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.ContainsField('a', {
+      a: 1,
+      b: 2,
+      c: 3,
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "contains_field": "a",
         "in": Object {
@@ -505,19 +503,19 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.ContainsField('0', '0')).toMatchInlineSnapshot(`
+  expect(q.ContainsField('0', '0')).toMatchInlineSnapshot(`
       Object {
         "contains_field": "0",
         "in": "0",
       }
     `);
-  });
+});
 
-  test('ContainsPath', () => {
-    const q = new Query();
+test('ContainsPath', () => {
+  const q = new Query();
 
-    expect(q.ContainsPath([1, 2], [1, ['a', 'b', 'c'], 3]))
-      .toMatchInlineSnapshot(`
+  expect(q.ContainsPath([1, 2], [1, ['a', 'b', 'c'], 3]))
+    .toMatchInlineSnapshot(`
       Object {
         "contains_path": Array [
           1,
@@ -535,13 +533,13 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.ContainsPath(['b', 'two'], {
-        a: 1,
-        b: { two: 2 },
-        c: 3,
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.ContainsPath(['b', 'two'], {
+      a: 1,
+      b: { two: 2 },
+      c: 3,
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "contains_path": Array [
           "b",
@@ -560,35 +558,35 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('ContainsStr', () => {
-    expect(new Query().ContainsStr('Fauna', 'a')).toMatchInlineSnapshot(`
+test('ContainsStr', () => {
+  expect(new Query().ContainsStr('Fauna', 'a')).toMatchInlineSnapshot(`
       Object {
         "containsstr": "Fauna",
         "search": "a",
       }
     `);
-  });
+});
 
-  test('ContainsStrRegex', () => {
-    expect(new Query().ContainsStrRegex('Fauna', '(Fa|na)'))
-      .toMatchInlineSnapshot(`
+test('ContainsStrRegex', () => {
+  expect(new Query().ContainsStrRegex('Fauna', '(Fa|na)'))
+    .toMatchInlineSnapshot(`
       Object {
         "containsstrregex": "Fauna",
         "pattern": "(Fa|na)",
       }
     `);
-  });
+});
 
-  test('ContainsValue', () => {
-    expect(
-      new Query().ContainsValue(3, {
-        a: 1,
-        b: 2,
-        c: 3,
-      })
-    ).toMatchInlineSnapshot(`
+test('ContainsValue', () => {
+  expect(
+    new Query().ContainsValue(3, {
+      a: 1,
+      b: 2,
+      c: 3,
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "contains_value": 3,
         "in": Object {
@@ -600,27 +598,27 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Cos', () => {
-    expect(new Query().Cos(0.5)).toMatchInlineSnapshot(`
+test('Cos', () => {
+  expect(new Query().Cos(0.5)).toMatchInlineSnapshot(`
       Object {
         "cos": 0.5,
       }
     `);
-  });
+});
 
-  test('Cosh', () => {
-    expect(new Query().Cosh(0.5)).toMatchInlineSnapshot(`
+test('Cosh', () => {
+  expect(new Query().Cosh(0.5)).toMatchInlineSnapshot(`
       Object {
         "cosh": 0.5,
       }
     `);
-  });
+});
 
-  test('Count', () => {
-    expect(new Query().Count([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
-      .toMatchInlineSnapshot(`
+test('Count', () => {
+  expect(new Query().Count([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+    .toMatchInlineSnapshot(`
       Object {
         "count": Array [
           1,
@@ -636,28 +634,28 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Create', () => {
-    const q = new Query<{
-      Databases: [];
-      Functions: {};
-      Collections: {
-        users: {
-          id: string;
-          name: string;
-        };
+test('Create', () => {
+  const q = new Query<{
+    Databases: [];
+    Functions: {};
+    Collections: {
+      users: {
+        id: string;
+        name: string;
       };
-    }>();
+    };
+  }>();
 
-    expect(
-      q.Create('users', {
-        data: {
-          id: '1',
-          name: 'John',
-        },
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Create('users', {
+      data: {
+        id: '1',
+        name: 'John',
+      },
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create": "users",
         "params": Object {
@@ -673,14 +671,14 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Create(q.Collection('users'), {
-        data: {
-          id: '1',
-          name: 'John',
-        },
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Create(q.Collection('users'), {
+      data: {
+        id: '1',
+        name: 'John',
+      },
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create": Object {
           "collection": "users",
@@ -698,21 +696,21 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Create('users', {
-        data: {
-          id: '1',
-          name: 'John',
-          nested: {
-            something: true,
-          },
+  expect(
+    q.Create('users', {
+      data: {
+        id: '1',
+        name: 'John',
+        nested: {
+          something: true,
         },
-        ttl: q.Now(),
-        credentials: {
-          password: '123',
-        },
-      })
-    ).toMatchInlineSnapshot(`
+      },
+      ttl: q.Now(),
+      credentials: {
+        password: '123',
+      },
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create": "users",
         "params": Object {
@@ -740,21 +738,21 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('CreateAccessProvider', () => {
-    const q = new Query<{
-      Roles: ['admin'];
-      AccessProviders: ['Auth0-myapp'];
-    }>();
+test('CreateAccessProvider', () => {
+  const q = new Query<{
+    Roles: ['admin'];
+    AccessProviders: ['Auth0-myapp'];
+  }>();
 
-    expect(
-      q.CreateAccessProvider({
-        name: 'Auth0-myapp',
-        issuer: 'https://myapp.auth0.com/',
-        jwks_uri: 'https://myapp.auth0.com/.well-known/jwks.json',
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.CreateAccessProvider({
+      name: 'Auth0-myapp',
+      issuer: 'https://myapp.auth0.com/',
+      jwks_uri: 'https://myapp.auth0.com/.well-known/jwks.json',
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_access_provider": Object {
           "object": Object {
@@ -766,20 +764,20 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.CreateAccessProvider({
-        name: 'Auth0-myapp',
-        issuer: 'https://myapp.auth0.com/',
-        jwks_uri: 'https://myapp.auth0.com/.well-known/jwks.json',
-        data: {
-          something: true,
-          nestedSomething: {
-            hello: 'world',
-          },
+  expect(
+    q.CreateAccessProvider({
+      name: 'Auth0-myapp',
+      issuer: 'https://myapp.auth0.com/',
+      jwks_uri: 'https://myapp.auth0.com/.well-known/jwks.json',
+      data: {
+        something: true,
+        nestedSomething: {
+          hello: 'world',
         },
-        roles: [q.Role('admin')],
-      })
-    ).toMatchInlineSnapshot(`
+      },
+      roles: [q.Role('admin')],
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_access_provider": Object {
           "object": Object {
@@ -806,25 +804,25 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.CreateAccessProvider({
-        name: 'Auth0-myapp',
-        issuer: 'https://myapp.auth0.com/',
-        jwks_uri: 'https://myapp.auth0.com/.well-known/jwks.json',
-        data: {
-          something: true,
-          nestedSomething: {
-            hello: 'world',
-          },
+  expect(
+    q.CreateAccessProvider({
+      name: 'Auth0-myapp',
+      issuer: 'https://myapp.auth0.com/',
+      jwks_uri: 'https://myapp.auth0.com/.well-known/jwks.json',
+      data: {
+        something: true,
+        nestedSomething: {
+          hello: 'world',
         },
-        roles: [
-          {
-            role: q.Role('admin'),
-            predicate: q.Query(q.Lambda('a', 5)),
-          },
-        ],
-      })
-    ).toMatchInlineSnapshot(`
+      },
+      roles: [
+        {
+          role: q.Role('admin'),
+          predicate: q.Query(q.Lambda('a', 5)),
+        },
+      ],
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_access_provider": Object {
           "object": Object {
@@ -860,20 +858,20 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('CreateCollection', () => {
-    const q = new Query<{
-      Collections: {
-        users: {};
-      };
-    }>();
+test('CreateCollection', () => {
+  const q = new Query<{
+    Collections: {
+      users: {};
+    };
+  }>();
 
-    expect(
-      q.CreateCollection({
-        name: 'users',
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.CreateCollection({
+      name: 'users',
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_collection": Object {
           "object": Object {
@@ -882,18 +880,18 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('CreateDatabase', () => {
-    const q = new Query<{
-      Databases: ['child1'];
-    }>();
+test('CreateDatabase', () => {
+  const q = new Query<{
+    Databases: ['child1'];
+  }>();
 
-    expect(
-      q.CreateDatabase({
-        name: 'child1',
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.CreateDatabase({
+      name: 'child1',
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_database": Object {
           "object": Object {
@@ -902,23 +900,23 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('CreateIndex', () => {
-    let q = new Query<{
-      Collections: {
-        users: {
-          name: string;
-        };
+test('CreateIndex', () => {
+  let q = new Query<{
+    Collections: {
+      users: {
+        name: string;
       };
-    }>();
+    };
+  }>();
 
-    expect(
-      q.CreateIndex({
-        name: 'new-index',
-        source: q.Collection('users'),
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.CreateIndex({
+      name: 'new-index',
+      source: q.Collection('users'),
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_index": Object {
           "object": Object {
@@ -931,22 +929,22 @@ describe('Functions', () => {
       }
     `);
 
-    q = new Query<{
-      Collections: {
-        users: {
-          name: string;
-        };
+  q = new Query<{
+    Collections: {
+      users: {
+        name: string;
       };
-    }>();
+    };
+  }>();
 
-    expect(
-      q.CreateIndex({
-        name: 'new-index',
-        source: q.Collection('users'),
-        unique: true,
-        serialized: true,
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.CreateIndex({
+      name: 'new-index',
+      source: q.Collection('users'),
+      unique: true,
+      serialized: true,
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_index": Object {
           "object": Object {
@@ -961,25 +959,25 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.CreateIndex({
-        name: 'users_by_name',
-        source: {
-          collection: q.Collection('users'),
-          fields: {
-            name: q.Query(
-              q.Lambda('doc', q.Select(['data', 'name'], q.Var('doc')))
-            ),
-          },
+  expect(
+    q.CreateIndex({
+      name: 'users_by_name',
+      source: {
+        collection: q.Collection('users'),
+        fields: {
+          name: q.Query(
+            q.Lambda('doc', q.Select(['data', 'name'], q.Var('doc')))
+          ),
         },
-        terms: [{ binding: 'name' }],
-        values: [
-          { binding: 'name' },
-          { field: ['data', 'name'] },
-          { field: ['ref'] },
-        ],
-      })
-    ).toMatchInlineSnapshot(`
+      },
+      terms: [{ binding: 'name' }],
+      values: [
+        { binding: 'name' },
+        { field: ['data', 'name'] },
+        { field: ['ref'] },
+      ],
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_index": Object {
           "object": Object {
@@ -1042,17 +1040,17 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('CreateKey', () => {
-    const q = new Query();
+test('CreateKey', () => {
+  const q = new Query();
 
-    expect(
-      q.CreateKey({
-        database: q.Database('prydain'),
-        role: 'server',
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.CreateKey({
+      database: q.Database('prydain'),
+      role: 'server',
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_key": Object {
           "object": Object {
@@ -1064,22 +1062,22 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('CreateRole', () => {
-    const q = new Query<{ Collections: { spells: {} }; Roles: ['new-role'] }>();
+test('CreateRole', () => {
+  const q = new Query<{ Collections: { spells: {} }; Roles: ['new-role'] }>();
 
-    expect(
-      q.CreateRole({
-        name: 'new-role',
-        privileges: [
-          {
-            resource: q.Collection('spells'),
-            actions: { read: true },
-          },
-        ],
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.CreateRole({
+      name: 'new-role',
+      privileges: [
+        {
+          resource: q.Collection('spells'),
+          actions: { read: true },
+        },
+      ],
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "create_role": Object {
           "object": Object {
@@ -1102,56 +1100,56 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Credentials', () => {
-    const q = new Query();
+test('Credentials', () => {
+  const q = new Query();
 
-    expect(q.Credentials()).toMatchInlineSnapshot(`
+  expect(q.Credentials()).toMatchInlineSnapshot(`
       Object {
         "credentials": null,
       }
     `);
 
-    expect(q.Credentials(q.Database('db1'))).toMatchInlineSnapshot(`
+  expect(q.Credentials(q.Database('db1'))).toMatchInlineSnapshot(`
       Object {
         "credentials": Object {
           "database": "db1",
         },
       }
     `);
-  });
+});
 
-  test('CurrentIdentity', () => {
-    expect(new Query().CurrentIdentity()).toMatchInlineSnapshot(`
+test('CurrentIdentity', () => {
+  expect(new Query().CurrentIdentity()).toMatchInlineSnapshot(`
       Object {
         "current_identity": null,
       }
     `);
-  });
+});
 
-  test('CurrentToken', () => {
-    expect(new Query().CurrentToken()).toMatchInlineSnapshot(`
+test('CurrentToken', () => {
+  expect(new Query().CurrentToken()).toMatchInlineSnapshot(`
       Object {
         "current_token": null,
       }
     `);
-  });
+});
 
-  test('Database', () => {
-    const q = new Query<{
-      Databases: ['child1', 'child2', 'child3'];
-      Collections: {};
-      Functions: {};
-    }>();
+test('Database', () => {
+  const q = new Query<{
+    Databases: ['child1', 'child2', 'child3'];
+    Collections: {};
+    Functions: {};
+  }>();
 
-    expect(q.Database('child1')).toMatchInlineSnapshot(`
+  expect(q.Database('child1')).toMatchInlineSnapshot(`
       Object {
         "database": "child1",
       }
     `);
 
-    expect(q.Database('child2', q.Database('child2'))).toMatchInlineSnapshot(`
+  expect(q.Database('child2', q.Database('child2'))).toMatchInlineSnapshot(`
       Object {
         "database": "child2",
         "scope": Object {
@@ -1160,8 +1158,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Database('child2', q.Database('child2', q.Database('child3'))))
-      .toMatchInlineSnapshot(`
+  expect(q.Database('child2', q.Database('child2', q.Database('child3'))))
+    .toMatchInlineSnapshot(`
       Object {
         "database": "child2",
         "scope": Object {
@@ -1172,85 +1170,85 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Databases', () => {
-    const q = new Query();
+test('Databases', () => {
+  const q = new Query();
 
-    expect(q.Databases()).toMatchInlineSnapshot(`
+  expect(q.Databases()).toMatchInlineSnapshot(`
       Object {
         "databases": null,
       }
     `);
 
-    expect(q.Databases(q.Database('db1'))).toMatchInlineSnapshot(`
+  expect(q.Databases(q.Database('db1'))).toMatchInlineSnapshot(`
       Object {
         "databases": Object {
           "database": "db1",
         },
       }
     `);
-  });
+});
 
-  test('Date', () => {
-    expect(new Query().Date('1970-01-01')).toMatchInlineSnapshot(`
+test('Date', () => {
+  expect(new Query().Date('1970-01-01')).toMatchInlineSnapshot(`
       Object {
         "date": "1970-01-01",
       }
     `);
-  });
+});
 
-  test('DayOfMonth', () => {
-    const q = new Query();
+test('DayOfMonth', () => {
+  const q = new Query();
 
-    expect(q.DayOfMonth(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.DayOfMonth(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "day_of_month": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
+});
 
-  test('DayOfWeek', () => {
-    const q = new Query();
+test('DayOfWeek', () => {
+  const q = new Query();
 
-    expect(q.DayOfWeek(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.DayOfWeek(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "day_of_week": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
+});
 
-  test('DayOfYear', () => {
-    const q = new Query();
+test('DayOfYear', () => {
+  const q = new Query();
 
-    expect(q.DayOfYear(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.DayOfYear(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "day_of_year": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
+});
 
-  test('Degrees', () => {
-    const q = new Query();
+test('Degrees', () => {
+  const q = new Query();
 
-    expect(q.Degrees(0.5)).toMatchInlineSnapshot(`
+  expect(q.Degrees(0.5)).toMatchInlineSnapshot(`
       Object {
         "degrees": 0.5,
       }
     `);
-  });
+});
 
-  test('Delete', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Delete', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Delete(q.Ref(q.Collection('spells'), '181388642581742080')))
-      .toMatchInlineSnapshot(`
+  expect(q.Delete(q.Ref(q.Collection('spells'), '181388642581742080')))
+    .toMatchInlineSnapshot(`
       Object {
         "delete": Object {
           "id": "181388642581742080",
@@ -1260,13 +1258,12 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Difference', () => {
-    const q = new Query();
+test('Difference', () => {
+  const q = new Query();
 
-    expect(q.Difference(['A', 'B', 'C'], ['B', 'C', 'D']))
-      .toMatchInlineSnapshot(`
+  expect(q.Difference(['A', 'B', 'C'], ['B', 'C', 'D'])).toMatchInlineSnapshot(`
       Object {
         "difference": Array [
           Array [
@@ -1282,12 +1279,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Distinct', () => {
-    const q = new Query();
+test('Distinct', () => {
+  const q = new Query();
 
-    expect(q.Distinct(['A', 'B', 'C'])).toMatchInlineSnapshot(`
+  expect(q.Distinct(['A', 'B', 'C'])).toMatchInlineSnapshot(`
       Object {
         "distinct": Array [
           "A",
@@ -1296,12 +1293,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Divide', () => {
-    const q = new Query();
+test('Divide', () => {
+  const q = new Query();
 
-    expect(q.Divide(10, 5, 2)).toMatchInlineSnapshot(`
+  expect(q.Divide(10, 5, 2)).toMatchInlineSnapshot(`
       Object {
         "divide": Array [
           10,
@@ -1311,7 +1308,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Divide(q.Divide(10, 5), 2)).toMatchInlineSnapshot(`
+  expect(q.Divide(q.Divide(10, 5), 2)).toMatchInlineSnapshot(`
       Object {
         "divide": Array [
           Object {
@@ -1324,21 +1321,21 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Do', () => {
-    const q = new Query<{
-      Collections: { magical_creatures: { name: string } };
-    }>();
+test('Do', () => {
+  const q = new Query<{
+    Collections: { magical_creatures: { name: string } };
+  }>();
 
-    expect(
-      q.Do(
-        q.Create(q.Ref(q.Collection('magical_creatures'), '2'), {
-          data: { name: 'Orwen' },
-        }),
-        q.Select('ref', q.Ref(q.Collection('magical_creatures'), '2'))
-      )
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Do(
+      q.Create(q.Ref(q.Collection('magical_creatures'), '2'), {
+        data: { name: 'Orwen' },
+      }),
+      q.Select('ref', q.Ref(q.Collection('magical_creatures'), '2'))
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "do": Array [
           Object {
@@ -1370,28 +1367,28 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Documents', () => {
-    const q = new Query<{
-      Collections: {
-        Letters: {};
-      };
-    }>();
+test('Documents', () => {
+  const q = new Query<{
+    Collections: {
+      Letters: {};
+    };
+  }>();
 
-    expect(q.Documents(q.Collection('Letters'))).toMatchInlineSnapshot(`
+  expect(q.Documents(q.Collection('Letters'))).toMatchInlineSnapshot(`
       Object {
         "documents": Object {
           "collection": "Letters",
         },
       }
     `);
-  });
+});
 
-  test('Drop', () => {
-    const q = new Query();
+test('Drop', () => {
+  const q = new Query();
 
-    expect(q.Drop(2, [1, 2, 3])).toMatchInlineSnapshot(`
+  expect(q.Drop(2, [1, 2, 3])).toMatchInlineSnapshot(`
       Object {
         "collection": Array [
           1,
@@ -1402,8 +1399,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Drop(q.Var('numberToDrop'), [1, 2, q.Var('something')]))
-      .toMatchInlineSnapshot(`
+  expect(q.Drop(q.Var('numberToDrop'), [1, 2, q.Var('something')]))
+    .toMatchInlineSnapshot(`
       Object {
         "collection": Array [
           1,
@@ -1417,34 +1414,34 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('EndsWith', () => {
-    const q = new Query();
+test('EndsWith', () => {
+  const q = new Query();
 
-    expect(q.EndsWith('123', '3')).toMatchInlineSnapshot(`
+  expect(q.EndsWith('123', '3')).toMatchInlineSnapshot(`
       Object {
         "endswith": "123",
         "search": "3",
       }
     `);
-  });
+});
 
-  test('Epoch', () => {
-    const q = new Query();
+test('Epoch', () => {
+  const q = new Query();
 
-    expect(q.Epoch(0, 'day')).toMatchInlineSnapshot(`
+  expect(q.Epoch(0, 'day')).toMatchInlineSnapshot(`
       Object {
         "epoch": 0,
         "unit": "day",
       }
     `);
-  });
+});
 
-  test('Equals', () => {
-    const q = new Query();
+test('Equals', () => {
+  const q = new Query();
 
-    expect(q.Equals(1, 1)).toMatchInlineSnapshot(`
+  expect(q.Equals(1, 1)).toMatchInlineSnapshot(`
       Object {
         "equals": Array [
           1,
@@ -1453,7 +1450,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Equals({ a: true }, { a: true })).toMatchInlineSnapshot(`
+  expect(q.Equals({ a: true }, { a: true })).toMatchInlineSnapshot(`
       Object {
         "equals": Array [
           Object {
@@ -1469,13 +1466,13 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Events', () => {
-    const q = new Query<{ Collections: { posts: {} } }>();
+test('Events', () => {
+  const q = new Query<{ Collections: { posts: {} } }>();
 
-    expect(q.Events(q.Ref(q.Collection('posts'), '233555580689580553')))
-      .toMatchInlineSnapshot(`
+  expect(q.Events(q.Ref(q.Collection('posts'), '233555580689580553')))
+    .toMatchInlineSnapshot(`
       Object {
         "events": Object {
           "id": "233555580689580553",
@@ -1485,13 +1482,13 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Exists', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Exists', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Exists(q.Ref(q.Collection('spells'), '181388642046968320')))
-      .toMatchInlineSnapshot(`
+  expect(q.Exists(q.Ref(q.Collection('spells'), '181388642046968320')))
+    .toMatchInlineSnapshot(`
       Object {
         "exists": Object {
           "id": "181388642046968320",
@@ -1502,8 +1499,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Exists(q.Ref(q.Collection('spells'), '181388642046968320'), 99))
-      .toMatchInlineSnapshot(`
+  expect(q.Exists(q.Ref(q.Collection('spells'), '181388642046968320'), 99))
+    .toMatchInlineSnapshot(`
       Object {
         "exists": Object {
           "id": "181388642046968320",
@@ -1514,23 +1511,23 @@ describe('Functions', () => {
         "ts": 99,
       }
     `);
-  });
+});
 
-  test('Exp', () => {
-    const q = new Query<{ Collections: { posts: {} } }>();
+test('Exp', () => {
+  const q = new Query<{ Collections: { posts: {} } }>();
 
-    expect(q.Exp(1.5)).toMatchInlineSnapshot(`
+  expect(q.Exp(1.5)).toMatchInlineSnapshot(`
       Object {
         "exp": 1.5,
       }
     `);
-  });
+});
 
-  test('Filter', () => {
-    const q = new Query<{ Collections: { posts: {} } }>();
+test('Filter', () => {
+  const q = new Query<{ Collections: { posts: {} } }>();
 
-    expect(q.Filter([1, 2, 3], q.Lambda('i', q.Equals(0, q.Var('i')))))
-      .toMatchInlineSnapshot(`
+  expect(q.Filter([1, 2, 3], q.Lambda('i', q.Equals(0, q.Var('i')))))
+    .toMatchInlineSnapshot(`
       Object {
         "collection": Array [
           1,
@@ -1550,38 +1547,38 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('FindStr', () => {
-    const q = new Query();
+test('FindStr', () => {
+  const q = new Query();
 
-    expect(q.FindStr('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
+  expect(q.FindStr('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
       Object {
         "find": "fgfwear",
         "findstr": "asdsad",
       }
     `);
 
-    expect(q.FindStr('asdsad', 'fgfwear', 8)).toMatchInlineSnapshot(`
+  expect(q.FindStr('asdsad', 'fgfwear', 8)).toMatchInlineSnapshot(`
       Object {
         "find": "fgfwear",
         "findstr": "asdsad",
         "start": 8,
       }
     `);
-  });
+});
 
-  test('FindStrRegex', () => {
-    const q = new Query();
+test('FindStrRegex', () => {
+  const q = new Query();
 
-    expect(q.FindStrRegex('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
+  expect(q.FindStrRegex('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
       Object {
         "find": "fgfwear",
         "findstrregex": "asdsad",
       }
     `);
 
-    expect(q.FindStrRegex('asdsad', 'fgfwear', 8)).toMatchInlineSnapshot(`
+  expect(q.FindStrRegex('asdsad', 'fgfwear', 8)).toMatchInlineSnapshot(`
       Object {
         "find": "fgfwear",
         "findstrregex": "asdsad",
@@ -1589,7 +1586,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.FindStrRegex('asdsad', 'fgfwear', 8, 12)).toMatchInlineSnapshot(`
+  expect(q.FindStrRegex('asdsad', 'fgfwear', 8, 12)).toMatchInlineSnapshot(`
       Object {
         "find": "fgfwear",
         "findstrregex": "asdsad",
@@ -1597,23 +1594,23 @@ describe('Functions', () => {
         "start": 8,
       }
     `);
-  });
+});
 
-  test('Floor', () => {
-    const q = new Query();
+test('Floor', () => {
+  const q = new Query();
 
-    expect(q.Floor(1.0)).toMatchInlineSnapshot(`
+  expect(q.Floor(1.0)).toMatchInlineSnapshot(`
       Object {
         "floor": 1,
       }
     `);
-  });
+});
 
-  test('Foreach', () => {
-    const q = new Query();
+test('Foreach', () => {
+  const q = new Query();
 
-    expect(q.Foreach([1, 2, 3], q.Lambda('i', q.Var('i'))))
-      .toMatchInlineSnapshot(`
+  expect(q.Foreach([1, 2, 3], q.Lambda('i', q.Var('i'))))
+    .toMatchInlineSnapshot(`
       Object {
         "collection": Array [
           1,
@@ -1628,37 +1625,34 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Floor', () => {
-    const q = new Query();
+test('Floor', () => {
+  const q = new Query();
 
-    expect(q.Floor(1.0)).toMatchInlineSnapshot(`
+  expect(q.Floor(1.0)).toMatchInlineSnapshot(`
       Object {
         "floor": 1,
       }
     `);
-  });
+});
 
-  test('Foreach', () => {
-    const q = new Query<{ Collections: { spellbooks: {} } }>();
+test('Foreach', () => {
+  const q = new Query<{ Collections: { spellbooks: {} } }>();
 
-    expect(
-      q.Foreach(
-        q.Paginate(q.Match(q.Index('spells_by_element'), 'fire')),
-        q.Lambda(
-          'spell',
-          q.Update(q.Var('spell'), {
-            data: {
-              spellbook: q.Ref(
-                q.Collection('spellbooks'),
-                '181388642139243008'
-              ),
-            },
-          })
-        )
+  expect(
+    q.Foreach(
+      q.Paginate(q.Match(q.Index('spells_by_element'), 'fire')),
+      q.Lambda(
+        'spell',
+        q.Update(q.Var('spell'), {
+          data: {
+            spellbook: q.Ref(q.Collection('spellbooks'), '181388642139243008'),
+          },
+        })
       )
-    ).toMatchInlineSnapshot(`
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "collection": Object {
           "paginate": Object {
@@ -1692,19 +1686,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Format', () => {
-    const q = new Query();
+test('Format', () => {
+  const q = new Query();
 
-    expect(q.Format('%nDecimals:')).toMatchInlineSnapshot(`
+  expect(q.Format('%nDecimals:')).toMatchInlineSnapshot(`
       Object {
         "format": "%nDecimals:",
         "values": Array [],
       }
     `);
 
-    expect(q.Format('%nDecimals:', { a: true })).toMatchInlineSnapshot(`
+  expect(q.Format('%nDecimals:', { a: true })).toMatchInlineSnapshot(`
       Object {
         "format": "%nDecimals:",
         "values": Object {
@@ -1715,8 +1709,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Format('%nDecimals:', { a: true }, { b: true }))
-      .toMatchInlineSnapshot(`
+  expect(q.Format('%nDecimals:', { a: true }, { b: true }))
+    .toMatchInlineSnapshot(`
       Object {
         "format": "%nDecimals:",
         "values": Array [
@@ -1733,24 +1727,24 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Function', () => {
-    const q = new Query<{
-      Databases: ['child1', 'child2'];
-      Collections: {};
-      Functions: {
-        add: [number, number];
-      };
-    }>();
+test('Function', () => {
+  const q = new Query<{
+    Databases: ['child1', 'child2'];
+    Collections: {};
+    Functions: {
+      add: [number, number];
+    };
+  }>();
 
-    expect(q.Function('add')).toMatchInlineSnapshot(`
+  expect(q.Function('add')).toMatchInlineSnapshot(`
       Object {
         "function": "add",
       }
     `);
 
-    expect(q.Function('add', q.Database('child1'))).toMatchInlineSnapshot(`
+  expect(q.Function('add', q.Database('child1'))).toMatchInlineSnapshot(`
       Object {
         "function": "add",
         "scope": Object {
@@ -1759,8 +1753,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Function('add', q.Database('child1', q.Database('child2'))))
-      .toMatchInlineSnapshot(`
+  expect(q.Function('add', q.Database('child1', q.Database('child2'))))
+    .toMatchInlineSnapshot(`
       Object {
         "function": "add",
         "scope": Object {
@@ -1771,36 +1765,36 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Functions', () => {
-    const q = new Query();
+test('Functions', () => {
+  const q = new Query();
 
-    expect(q.Functions()).toMatchInlineSnapshot(`
+  expect(q.Functions()).toMatchInlineSnapshot(`
       Object {
         "functions": null,
       }
     `);
 
-    expect(q.Functions(q.Database('db1'))).toMatchInlineSnapshot(`
+  expect(q.Functions(q.Database('db1'))).toMatchInlineSnapshot(`
       Object {
         "functions": Object {
           "database": "db1",
         },
       }
     `);
-  });
+});
 
-  test('GT', () => {
-    const q = new Query();
+test('GT', () => {
+  const q = new Query();
 
-    expect(q.GT(1)).toMatchInlineSnapshot(`
+  expect(q.GT(1)).toMatchInlineSnapshot(`
       Object {
         "gt": 1,
       }
     `);
 
-    expect(q.GT(3, 2, 1)).toMatchInlineSnapshot(`
+  expect(q.GT(3, 2, 1)).toMatchInlineSnapshot(`
       Object {
         "gt": Array [
           3,
@@ -1809,17 +1803,17 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('GTE', () => {
-    const q = new Query();
+test('GTE', () => {
+  const q = new Query();
 
-    expect(q.GTE(1)).toMatchInlineSnapshot(`
+  expect(q.GTE(1)).toMatchInlineSnapshot(`
       Object {
         "gte": 1,
       }
     `);
-    expect(q.GTE(3, 2, 1)).toMatchInlineSnapshot(`
+  expect(q.GTE(3, 2, 1)).toMatchInlineSnapshot(`
       Object {
         "gte": Array [
           3,
@@ -1828,13 +1822,13 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Get', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Get', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Get(q.Ref(q.Collection('spells'), '181388642046968320')))
-      .toMatchInlineSnapshot(`
+  expect(q.Get(q.Ref(q.Collection('spells'), '181388642046968320')))
+    .toMatchInlineSnapshot(`
       Object {
         "get": Object {
           "id": "181388642046968320",
@@ -1844,65 +1838,65 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('HasCurrentIdentity', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('HasCurrentIdentity', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.HasCurrentIdentity()).toMatchInlineSnapshot(`
+  expect(q.HasCurrentIdentity()).toMatchInlineSnapshot(`
       Object {
         "has_current_identity": null,
       }
     `);
-  });
+});
 
-  test('HasCurrentToken', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('HasCurrentToken', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.HasCurrentToken()).toMatchInlineSnapshot(`
+  expect(q.HasCurrentToken()).toMatchInlineSnapshot(`
       Object {
         "has_current_token": null,
       }
     `);
-  });
+});
 
-  test('Hour', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Hour', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Hour(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.Hour(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "hour": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
+});
 
-  test('Hypot', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Hypot', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Hypot(3.0)).toMatchInlineSnapshot(`
+  expect(q.Hypot(3.0)).toMatchInlineSnapshot(`
       Object {
         "hypot": 3,
       }
     `);
-    expect(q.Hypot(3.5, 5.5)).toMatchInlineSnapshot(`
+  expect(q.Hypot(3.5, 5.5)).toMatchInlineSnapshot(`
       Object {
         "b": 5.5,
         "hypot": 3.5,
       }
     `);
-  });
+});
 
-  test('Identify', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Identify', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Identify(
-        q.Ref(q.Collection('spells'), '181388642114077184'),
-        'abracadabra'
-      )
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Identify(
+      q.Ref(q.Collection('spells'), '181388642114077184'),
+      'abracadabra'
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "identify": Object {
           "id": "181388642114077184",
@@ -1913,30 +1907,30 @@ describe('Functions', () => {
         "password": "abracadabra",
       }
     `);
-  });
+});
 
-  test('If', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('If', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.If(true, 'was true', 'was false')).toMatchInlineSnapshot(`
+  expect(q.If(true, 'was true', 'was false')).toMatchInlineSnapshot(`
       Object {
         "else": "was false",
         "if": true,
         "then": "was true",
       }
     `);
-  });
+});
 
-  test('Index', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Index', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Index('spells_by_element')).toMatchInlineSnapshot(`
+  expect(q.Index('spells_by_element')).toMatchInlineSnapshot(`
       Object {
         "index": "spells_by_element",
       }
     `);
-    expect(q.Index('spells_by_element', q.Database('child_db')))
-      .toMatchInlineSnapshot(`
+  expect(q.Index('spells_by_element', q.Database('child_db')))
+    .toMatchInlineSnapshot(`
       Object {
         "index": "spells_by_element",
         "scope": Object {
@@ -1944,37 +1938,32 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Indexes', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Indexes', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Paginate(q.Indexes())).toMatchInlineSnapshot(`
+  expect(q.Paginate(q.Indexes())).toMatchInlineSnapshot(`
       Object {
         "paginate": Object {
           "indexes": null,
         },
       }
     `);
-  });
+});
 
-  test('Insert', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Insert', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Insert(
-        q.Ref(q.Collection('spells'), '181388642581742080'),
-        1,
-        'create',
-        {
-          data: {
-            name: "Mountain's Thunder",
-            cost: 10,
-            element: ['air', 'earth'],
-          },
-        }
-      )
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Insert(q.Ref(q.Collection('spells'), '181388642581742080'), 1, 'create', {
+      data: {
+        name: "Mountain's Thunder",
+        cost: 10,
+        element: ['air', 'earth'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "action": "create",
         "insert": Object {
@@ -2000,12 +1989,12 @@ describe('Functions', () => {
         "ts": 1,
       }
     `);
-  });
+});
 
-  test('Intersection', () => {
-    const q = new Query();
+test('Intersection', () => {
+  const q = new Query();
 
-    expect(q.Intersection(['A', 'B'], ['C', 'D'])).toMatchInlineSnapshot(`
+  expect(q.Intersection(['A', 'B'], ['C', 'D'])).toMatchInlineSnapshot(`
       Object {
         "intersection": Array [
           Array [
@@ -2020,8 +2009,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Intersection(['A', 'B'], ['C', 'D', { a: true }]))
-      .toMatchInlineSnapshot(`
+  expect(q.Intersection(['A', 'B'], ['C', 'D', { a: true }]))
+    .toMatchInlineSnapshot(`
       Object {
         "intersection": Array [
           Array [
@@ -2040,19 +2029,19 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('IsArray', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsArray', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsArray(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsArray(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_array": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsArray({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsArray({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_array": Object {
           "object": Object {
@@ -2061,19 +2050,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsBoolean', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsBoolean', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsBoolean(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsBoolean(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_boolean": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsBoolean({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsBoolean({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_boolean": Object {
           "object": Object {
@@ -2082,19 +2071,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsBytes', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsBytes', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsBytes(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsBytes(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_bytes": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsBytes({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsBytes({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_bytes": Object {
           "object": Object {
@@ -2103,19 +2092,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsCollection', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsCollection', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsCollection(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsCollection(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_collection": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsCollection({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsCollection({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_collection": Object {
           "object": Object {
@@ -2124,19 +2113,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsCredentials', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsCredentials', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsCredentials(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsCredentials(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_credentials": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsCredentials({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsCredentials({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_credentials": Object {
           "object": Object {
@@ -2145,19 +2134,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsDatabase', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsDatabase', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsDatabase(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsDatabase(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_database": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsDatabase({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsDatabase({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_database": Object {
           "object": Object {
@@ -2166,19 +2155,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsDate', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsDate', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsDate(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsDate(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_date": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsDate({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsDate({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_date": Object {
           "object": Object {
@@ -2187,19 +2176,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsDoc', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsDoc', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsDoc(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsDoc(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_doc": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsDoc({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsDoc({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_doc": Object {
           "object": Object {
@@ -2208,19 +2197,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsDouble', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsDouble', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsDouble(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsDouble(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_double": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsDouble({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsDouble({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_double": Object {
           "object": Object {
@@ -2229,31 +2218,31 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsEmpty', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsEmpty', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsEmpty(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsEmpty(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_empty": Array [
           "array",
         ],
       }
     `);
-  });
+});
 
-  test('IsFunction', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsFunction', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsFunction(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsFunction(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_function": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsFunction({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsFunction({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_function": Object {
           "object": Object {
@@ -2262,19 +2251,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsIndex', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsIndex', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsIndex(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsIndex(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_index": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsIndex({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsIndex({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_index": Object {
           "object": Object {
@@ -2283,19 +2272,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsInteger', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsInteger', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsInteger(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsInteger(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_integer": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsInteger({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsInteger({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_integer": Object {
           "object": Object {
@@ -2304,19 +2293,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsKey', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsKey', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsKey(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsKey(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_key": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsKey({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsKey({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_key": Object {
           "object": Object {
@@ -2325,19 +2314,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsLambda', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsLambda', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsLambda(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsLambda(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_lambda": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsLambda({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsLambda({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_lambda": Object {
           "object": Object {
@@ -2346,31 +2335,31 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsNonEmpty', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsNonEmpty', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsNonEmpty(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsNonEmpty(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_nonempty": Array [
           "array",
         ],
       }
     `);
-  });
+});
 
-  test('IsNull', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsNull', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsNull(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsNull(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_null": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsNull({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsNull({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_null": Object {
           "object": Object {
@@ -2379,19 +2368,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsNumber', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsNumber', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsNumber(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsNumber(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_number": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsNumber({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsNumber({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_number": Object {
           "object": Object {
@@ -2400,19 +2389,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsObject', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsObject', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsObject(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsObject(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_object": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsObject({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsObject({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_object": Object {
           "object": Object {
@@ -2421,19 +2410,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsRef', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsRef', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsRef(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsRef(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_ref": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsRef({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsRef({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_ref": Object {
           "object": Object {
@@ -2442,19 +2431,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsRole', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsRole', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsRole(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsRole(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_role": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsRole({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsRole({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_role": Object {
           "object": Object {
@@ -2463,19 +2452,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsSet', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsSet', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsSet(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsSet(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_set": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsSet({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsSet({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_set": Object {
           "object": Object {
@@ -2484,19 +2473,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsString', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsString', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsString(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsString(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_string": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsString({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsString({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_string": Object {
           "object": Object {
@@ -2505,19 +2494,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsTimestamp', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsTimestamp', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsTimestamp(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsTimestamp(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_timestamp": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsTimestamp({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsTimestamp({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_timestamp": Object {
           "object": Object {
@@ -2526,19 +2515,19 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('IsToken', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('IsToken', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.IsToken(['array'])).toMatchInlineSnapshot(`
+  expect(q.IsToken(['array'])).toMatchInlineSnapshot(`
       Object {
         "is_token": Array [
           "array",
         ],
       }
     `);
-    expect(q.IsToken({ a: true })).toMatchInlineSnapshot(`
+  expect(q.IsToken({ a: true })).toMatchInlineSnapshot(`
       Object {
         "is_token": Object {
           "object": Object {
@@ -2547,23 +2536,23 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Join', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Join', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Join(
-        q.Match(
-          q.Index('products_by_store'),
-          q.Ref(q.Collection('spells'), '301')
-        ),
-        q.Lambda(
-          ['name', 'description', 'price'],
-          q.Match(q.Index('inventory_by_product'), q.Var('name'))
-        )
+  expect(
+    q.Join(
+      q.Match(
+        q.Index('products_by_store'),
+        q.Ref(q.Collection('spells'), '301')
+      ),
+      q.Lambda(
+        ['name', 'description', 'price'],
+        q.Match(q.Index('inventory_by_product'), q.Var('name'))
       )
-    ).toMatchInlineSnapshot(`
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "join": Object {
           "match": Object {
@@ -2593,40 +2582,40 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('KeyFromSecret', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('KeyFromSecret', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.KeyFromSecret('123')).toMatchInlineSnapshot(`
+  expect(q.KeyFromSecret('123')).toMatchInlineSnapshot(`
       Object {
         "key_from_secret": "123",
       }
     `);
-  });
+});
 
-  test('Keys', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Keys', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Keys()).toMatchInlineSnapshot(`
+  expect(q.Keys()).toMatchInlineSnapshot(`
       Object {
         "keys": null,
       }
     `);
 
-    expect(q.Keys(q.Database('child_db'))).toMatchInlineSnapshot(`
+  expect(q.Keys(q.Database('child_db'))).toMatchInlineSnapshot(`
       Object {
         "keys": Object {
           "database": "child_db",
         },
       }
     `);
-  });
+});
 
-  test('LT', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('LT', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.LT(1, 3)).toMatchInlineSnapshot(`
+  expect(q.LT(1, 3)).toMatchInlineSnapshot(`
       Object {
         "lt": Array [
           1,
@@ -2634,17 +2623,17 @@ describe('Functions', () => {
         ],
       }
     `);
-    expect(q.LT(3)).toMatchInlineSnapshot(`
+  expect(q.LT(3)).toMatchInlineSnapshot(`
       Object {
         "lt": 3,
       }
     `);
-  });
+});
 
-  test('LTE', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('LTE', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.LTE(1, 3)).toMatchInlineSnapshot(`
+  expect(q.LTE(1, 3)).toMatchInlineSnapshot(`
       Object {
         "lte": Array [
           1,
@@ -2652,27 +2641,27 @@ describe('Functions', () => {
         ],
       }
     `);
-    expect(q.LTE(1)).toMatchInlineSnapshot(`
+  expect(q.LTE(1)).toMatchInlineSnapshot(`
       Object {
         "lte": 1,
       }
     `);
-  });
+});
 
-  test('LTrim', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('LTrim', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.LTrim(' Fire')).toMatchInlineSnapshot(`
+  expect(q.LTrim(' Fire')).toMatchInlineSnapshot(`
       Object {
         "ltrim": " Fire",
       }
     `);
-  });
+});
 
-  test('Lambda', () => {
-    const q = new Query();
+test('Lambda', () => {
+  const q = new Query();
 
-    expect(q.Query(q.Lambda('a', 5))).toMatchInlineSnapshot(`
+  expect(q.Query(q.Lambda('a', 5))).toMatchInlineSnapshot(`
       Object {
         "query": Object {
           "expr": 5,
@@ -2681,8 +2670,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Lambda('name', q.Concat([q.Var('name'), 'Wen'])))
-      .toMatchInlineSnapshot(`
+  expect(q.Lambda('name', q.Concat([q.Var('name'), 'Wen'])))
+    .toMatchInlineSnapshot(`
       Object {
         "expr": Object {
           "concat": Array [
@@ -2696,8 +2685,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Lambda(['f', 'l'], q.Concat([q.Var('f'), q.Var('l')], ' ')))
-      .toMatchInlineSnapshot(`
+  expect(q.Lambda(['f', 'l'], q.Concat([q.Var('f'), q.Var('l')], ' ')))
+    .toMatchInlineSnapshot(`
       Object {
         "expr": Object {
           "concat": Array [
@@ -2716,44 +2705,44 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Length', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Length', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Length('fire')).toMatchInlineSnapshot(`
+  expect(q.Length('fire')).toMatchInlineSnapshot(`
       Object {
         "length": "fire",
       }
     `);
-  });
+});
 
-  test('Let & Var', () => {
-    const q = new Query<
-      QuerySchema,
+test('Let & Var', () => {
+  const q = new Query<
+    QuerySchema,
+    {
+      testVar: string;
+      testVar2: string;
+      testVar3: string[];
+      testVar4: Record<string, unknown>;
+    }
+  >();
+
+  expect(
+    q.Let(
       {
-        testVar: string;
-        testVar2: string;
-        testVar3: string[];
-        testVar4: Record<string, unknown>;
-      }
-    >();
-
-    expect(
-      q.Let(
-        {
-          testVar: '2',
-          testVar2: '3',
-          testVar3: ['4', '5'],
-          testVar4: {
-            a: 3,
-            b: 5,
-          },
+        testVar: '2',
+        testVar2: '3',
+        testVar3: ['4', '5'],
+        testVar4: {
+          a: 3,
+          b: 5,
         },
+      },
 
-        null
-      )
-    ).toMatchInlineSnapshot(`
+      null
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "in": null,
         "let": Array [
@@ -2781,27 +2770,27 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Let(
-        {
-          testVar: '2',
-          testVar2: '3',
-          testVar3: ['4', '5'],
-          testVar4: {
-            a: 3,
-            b: 5,
-          },
+  expect(
+    q.Let(
+      {
+        testVar: '2',
+        testVar2: '3',
+        testVar3: ['4', '5'],
+        testVar4: {
+          a: 3,
+          b: 5,
         },
+      },
 
-        {
-          testValue: q.Var('testVar'),
-          testValue2: q.Var('testVar2'),
-          testValue3: {
-            v: q.Var('testVar3'),
-          },
-        }
-      )
-    ).toMatchInlineSnapshot(`
+      {
+        testValue: q.Var('testVar'),
+        testValue2: q.Var('testVar2'),
+        testValue3: {
+          v: q.Var('testVar3'),
+        },
+      }
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "in": Object {
           "object": Object {
@@ -2845,30 +2834,30 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Let(
-        {
-          testVar: '2',
-          testVar2: '3',
-          testVar3: ['4', '5'],
-          testVar4: {
-            a: 3,
-            b: 5,
-            c: {
-              f: 6,
-            },
+  expect(
+    q.Let(
+      {
+        testVar: '2',
+        testVar2: '3',
+        testVar3: ['4', '5'],
+        testVar4: {
+          a: 3,
+          b: 5,
+          c: {
+            f: 6,
           },
         },
+      },
 
-        {
-          testValue: q.Var('testVar'),
-          testValue2: q.Var('testVar2'),
-          testValue3: {
-            v: q.Var('testVar3'),
-          },
-        }
-      )
-    ).toMatchInlineSnapshot(`
+      {
+        testValue: q.Var('testVar'),
+        testValue2: q.Var('testVar2'),
+        testValue3: {
+          v: q.Var('testVar3'),
+        },
+      }
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "in": Object {
           "object": Object {
@@ -2916,36 +2905,36 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Ln', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Ln', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Ln(0.5)).toMatchInlineSnapshot(`
+  expect(q.Ln(0.5)).toMatchInlineSnapshot(`
       Object {
         "ln": 0.5,
       }
     `);
-  });
+});
 
-  test('Log', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Log', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Log(0.5)).toMatchInlineSnapshot(`
+  expect(q.Log(0.5)).toMatchInlineSnapshot(`
       Object {
         "log": 0.5,
       }
     `);
-  });
+});
 
-  test('Login', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Login', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Login(q.Ref(q.Collection('spells'), '181388642114077184'), {
-        password: 'abracadabra',
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Login(q.Ref(q.Collection('spells'), '181388642114077184'), {
+      password: 'abracadabra',
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "login": Object {
           "id": "181388642114077184",
@@ -2960,33 +2949,33 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Logout', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Logout', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Logout(true)).toMatchInlineSnapshot(`
+  expect(q.Logout(true)).toMatchInlineSnapshot(`
       Object {
         "logout": true,
       }
     `);
-  });
+});
 
-  test('LowerCase', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('LowerCase', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.LowerCase('FiRe')).toMatchInlineSnapshot(`
+  expect(q.LowerCase('FiRe')).toMatchInlineSnapshot(`
       Object {
         "lowercase": "FiRe",
       }
     `);
-  });
+});
 
-  test('Map', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Map', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Map([1, 2, 3], q.Lambda('x', q.Add(q.Var('x'), 1))))
-      .toMatchInlineSnapshot(`
+  expect(q.Map([1, 2, 3], q.Lambda('x', q.Add(q.Var('x'), 1))))
+    .toMatchInlineSnapshot(`
       Object {
         "collection": Array [
           1,
@@ -3006,13 +2995,12 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Match', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Match', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Match(q.Index('spells_by_element'), 'fire'))
-      .toMatchInlineSnapshot(`
+  expect(q.Match(q.Index('spells_by_element'), 'fire')).toMatchInlineSnapshot(`
       Object {
         "match": Object {
           "index": "spells_by_element",
@@ -3020,12 +3008,12 @@ describe('Functions', () => {
         "terms": "fire",
       }
     `);
-  });
+});
 
-  test('Max', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Max', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Max(1, 5, 22)).toMatchInlineSnapshot(`
+  expect(q.Max(1, 5, 22)).toMatchInlineSnapshot(`
       Object {
         "max": Array [
           1,
@@ -3034,12 +3022,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Mean', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Mean', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Mean([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
+  expect(q.Mean([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
       Object {
         "mean": Array [
           1,
@@ -3055,13 +3043,13 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Merge', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Merge', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Merge({ a: 'Apple', b: 'Banana' }, { x: 'width', y: 'height' }))
-      .toMatchInlineSnapshot(`
+  expect(q.Merge({ a: 'Apple', b: 'Banana' }, { x: 'width', y: 'height' }))
+    .toMatchInlineSnapshot(`
       Object {
         "merge": Object {
           "object": Object {
@@ -3077,12 +3065,12 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Min', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Min', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Min(1, 0, 3, -1)).toMatchInlineSnapshot(`
+  expect(q.Min(1, 0, 3, -1)).toMatchInlineSnapshot(`
       Object {
         "min": Array [
           1,
@@ -3092,24 +3080,24 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Minute', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Minute', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Minute(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.Minute(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "minute": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
+});
 
-  test('Modulo', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Modulo', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Modulo(10, 5, 2)).toMatchInlineSnapshot(`
+  expect(q.Modulo(10, 5, 2)).toMatchInlineSnapshot(`
       Object {
         "modulo": Array [
           10,
@@ -3118,25 +3106,25 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Month', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Month', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Month(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.Month(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "month": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
+});
 
-  test('MoveDatabase', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('MoveDatabase', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.MoveDatabase(q.Database('a'), q.Database('b')))
-      .toMatchInlineSnapshot(`
+  expect(q.MoveDatabase(q.Database('a'), q.Database('b')))
+    .toMatchInlineSnapshot(`
       Object {
         "move_database": Object {
           "database": "a",
@@ -3146,12 +3134,12 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Multiply', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Multiply', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Multiply(100, 10)).toMatchInlineSnapshot(`
+  expect(q.Multiply(100, 10)).toMatchInlineSnapshot(`
       Object {
         "multiply": Array [
           100,
@@ -3159,40 +3147,40 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('NewId', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('NewId', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.NewId()).toMatchInlineSnapshot(`
+  expect(q.NewId()).toMatchInlineSnapshot(`
       Object {
         "new_id": null,
       }
     `);
-  });
+});
 
-  test('Not', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Not', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Not(true)).toMatchInlineSnapshot(`
+  expect(q.Not(true)).toMatchInlineSnapshot(`
       Object {
         "not": true,
       }
     `);
-  });
+});
 
-  test('Now', () => {
-    expect(new Query().Now()).toMatchInlineSnapshot(`
+test('Now', () => {
+  expect(new Query().Now()).toMatchInlineSnapshot(`
       Object {
         "now": null,
       }
     `);
-  });
+});
 
-  test('Or', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Or', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Or(true, true, false)).toMatchInlineSnapshot(`
+  expect(q.Or(true, true, false)).toMatchInlineSnapshot(`
       Object {
         "or": Array [
           true,
@@ -3201,17 +3189,17 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Paginate', () => {
-    const q = new Query<{ Collections: { Letters: {} } }>();
+test('Paginate', () => {
+  const q = new Query<{ Collections: { Letters: {} } }>();
 
-    expect(
-      q.Paginate(
-        q.Documents(q.Collection(q.Var('collection'))),
-        q.Var('paginate_options')
-      )
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Paginate(
+      q.Documents(q.Collection(q.Var('collection'))),
+      q.Var('paginate_options')
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "paginate": Object {
           "documents": Object {
@@ -3228,8 +3216,8 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Paginate(q.Documents(q.Collection('Letters')), { size: 3 }))
-      .toMatchInlineSnapshot(`
+  expect(q.Paginate(q.Documents(q.Collection('Letters')), { size: 3 }))
+    .toMatchInlineSnapshot(`
       Object {
         "paginate": Object {
           "documents": Object {
@@ -3240,18 +3228,18 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Let(
-        {
-          collection: 'foo',
-          paginate_options: { size: 3, events: true },
-        },
-        q.Paginate(
-          q.Documents(q.Collection(q.Var('collection'))),
-          q.Select(['hi'], { hi: {} })
-        )
+  expect(
+    q.Let(
+      {
+        collection: 'foo',
+        paginate_options: { size: 3, events: true },
+      },
+      q.Paginate(
+        q.Documents(q.Collection(q.Var('collection'))),
+        q.Select(['hi'], { hi: {} })
       )
-    ).toMatchInlineSnapshot(`
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "in": Object {
           "paginate": Object {
@@ -3291,23 +3279,23 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Pow', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Pow', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Pow(2, 3)).toMatchInlineSnapshot(`
+  expect(q.Pow(2, 3)).toMatchInlineSnapshot(`
       Object {
         "exp": 3,
         "pow": 2,
       }
     `);
-  });
+});
 
-  test('Prepend', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Prepend', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Prepend([1, 2, 3], [4, 5, 6])).toMatchInlineSnapshot(`
+  expect(q.Prepend([1, 2, 3], [4, 5, 6])).toMatchInlineSnapshot(`
       Object {
         "collection": Array [
           4,
@@ -3321,12 +3309,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Query', () => {
-    const q = new Query();
+test('Query', () => {
+  const q = new Query();
 
-    expect(q.Query(q.Lambda('X', q.Var('X')))).toMatchInlineSnapshot(`
+  expect(q.Query(q.Lambda('X', q.Var('X')))).toMatchInlineSnapshot(`
       Object {
         "query": Object {
           "expr": Object {
@@ -3337,14 +3325,14 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Query(
-        q.Lambda(['a', 'b'], {
-          a: q.Var('a'),
-          b: q.Var('b'),
-        })
-      )
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Query(
+      q.Lambda(['a', 'b'], {
+        a: q.Var('a'),
+        b: q.Var('b'),
+      })
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "query": Object {
           "expr": Object {
@@ -3364,35 +3352,34 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('RTrim', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('RTrim', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.RTrim('Fire\n\n\t\t  ')).toMatchInlineSnapshot(`
+  expect(q.RTrim('Fire\n\n\t\t  ')).toMatchInlineSnapshot(`
       Object {
         "rtrim": "Fire
 
       		  ",
       }
     `);
-  });
+});
 
-  test('Radians', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Radians', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Radians(2)).toMatchInlineSnapshot(`
+  expect(q.Radians(2)).toMatchInlineSnapshot(`
       Object {
         "radians": 2,
       }
     `);
-  });
+});
 
-  test('Range', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Range', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Range(q.Match(q.Index('letters')), 'F', 'M'))
-      .toMatchInlineSnapshot(`
+  expect(q.Range(q.Match(q.Index('letters')), 'F', 'M')).toMatchInlineSnapshot(`
       Object {
         "from": "F",
         "range": Object {
@@ -3404,20 +3391,20 @@ describe('Functions', () => {
         "to": "M",
       }
     `);
-  });
+});
 
-  test('Reduce', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Reduce', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Reduce(q.Lambda(['acc', 'value'], q.Add(q.Var('acc'), 1)), 0, [
-        1,
-        2,
-        3,
-        4,
-        5,
-      ])
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Reduce(q.Lambda(['acc', 'value'], q.Add(q.Var('acc'), 1)), 0, [
+      1,
+      2,
+      3,
+      4,
+      5,
+    ])
+  ).toMatchInlineSnapshot(`
       Object {
         "arrayOrSet": Array [
           1,
@@ -3444,44 +3431,44 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Reduce(
-        q.Lambda(
-          ['acc', 'value'],
-          q.Let(
-            {
-              count: q.Add(q.Select('count', q.Var('acc')), 1),
-              total: q.Add(q.Select('total', q.Var('acc')), q.Var('value')),
-              min: q.Select('min', q.Var('acc')),
-              max: q.Select('max', q.Var('acc')),
-            },
-            {
-              count: q.Var('count'),
-              total: q.Var('total'),
-              min: q.If(
-                q.LTE(q.Var('value'), q.Var('min')),
-                q.Var('value'),
-                q.Var('min')
-              ),
-              max: q.If(
-                q.GTE(q.Var('value'), q.Var('max')),
-                q.Var('value'),
-                q.Var('max')
-              ),
-              avg: q.Divide(q.Var('total'), q.Var('count')),
-            }
-          )
-        ),
-        {
-          count: 0,
-          total: 0,
-          min: 999999,
-          max: -999999,
-          avg: 0,
-        },
-        [1, 2, 3, 4, 5]
-      )
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Reduce(
+      q.Lambda(
+        ['acc', 'value'],
+        q.Let(
+          {
+            count: q.Add(q.Select('count', q.Var('acc')), 1),
+            total: q.Add(q.Select('total', q.Var('acc')), q.Var('value')),
+            min: q.Select('min', q.Var('acc')),
+            max: q.Select('max', q.Var('acc')),
+          },
+          {
+            count: q.Var('count'),
+            total: q.Var('total'),
+            min: q.If(
+              q.LTE(q.Var('value'), q.Var('min')),
+              q.Var('value'),
+              q.Var('min')
+            ),
+            max: q.If(
+              q.GTE(q.Var('value'), q.Var('max')),
+              q.Var('value'),
+              q.Var('max')
+            ),
+            avg: q.Divide(q.Var('total'), q.Var('count')),
+          }
+        )
+      ),
+      {
+        count: 0,
+        total: 0,
+        min: 999999,
+        max: -999999,
+        avg: 0,
+      },
+      [1, 2, 3, 4, 5]
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "arrayOrSet": Array [
           1,
@@ -3609,13 +3596,13 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Ref', () => {
-    const q = new Query<{ Collections: { spells: string } }>();
+test('Ref', () => {
+  const q = new Query<{ Collections: { spells: string } }>();
 
-    expect(q.Ref(q.Collection('spells'), '181388642046968320'))
-      .toMatchInlineSnapshot(`
+  expect(q.Ref(q.Collection('spells'), '181388642046968320'))
+    .toMatchInlineSnapshot(`
       Object {
         "id": "181388642046968320",
         "ref": Object {
@@ -3623,24 +3610,24 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('RegexEscape', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('RegexEscape', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.RegexEscape('.Fa*[un]a{1,}')).toMatchInlineSnapshot(`
+  expect(q.RegexEscape('.Fa*[un]a{1,}')).toMatchInlineSnapshot(`
       Object {
         "regexescape": ".Fa*[un]a{1,}",
       }
     `);
-  });
+});
 
-  test('Remove', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Remove', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Remove(q.Ref(q.Collection('spells'), '181388642581742080'), 1, 'create')
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Remove(q.Ref(q.Collection('spells'), '181388642581742080'), 1, 'create')
+  ).toMatchInlineSnapshot(`
       Object {
         "action": "create",
         "remove": Object {
@@ -3652,35 +3639,35 @@ describe('Functions', () => {
         "ts": 1,
       }
     `);
-  });
+});
 
-  test('Repeat', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Repeat', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Repeat('Yes')).toMatchInlineSnapshot(`
+  expect(q.Repeat('Yes')).toMatchInlineSnapshot(`
       Object {
         "repeat": "Yes",
       }
     `);
-    expect(q.Repeat('Yes! ', 3)).toMatchInlineSnapshot(`
+  expect(q.Repeat('Yes! ', 3)).toMatchInlineSnapshot(`
       Object {
         "number": 3,
         "repeat": "Yes! ",
       }
     `);
-  });
+});
 
-  test('Replace', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Replace', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Replace(q.Ref(q.Collection('spells'), '181388642581742080'), {
-        data: {
-          name: "Mountain's Thunder",
-          element: ['air', 'earth'],
-        },
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Replace(q.Ref(q.Collection('spells'), '181388642581742080'), {
+      data: {
+        name: "Mountain's Thunder",
+        element: ['air', 'earth'],
+      },
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "params": Object {
           "object": Object {
@@ -3703,34 +3690,34 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('ReplaceStr', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ReplaceStr', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ReplaceStr('One Fish Two Fish', 'Two', 'Blue'))
-      .toMatchInlineSnapshot(`
+  expect(q.ReplaceStr('One Fish Two Fish', 'Two', 'Blue'))
+    .toMatchInlineSnapshot(`
       Object {
         "find": "Two",
         "replace": "Blue",
         "replacestr": "One Fish Two Fish",
       }
     `);
-  });
+});
 
-  test('ReplaceStrRegex', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ReplaceStrRegex', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ReplaceStrRegex('One Fish Two Fish', 'Two', 'Blue'))
-      .toMatchInlineSnapshot(`
+  expect(q.ReplaceStrRegex('One Fish Two Fish', 'Two', 'Blue'))
+    .toMatchInlineSnapshot(`
       Object {
         "pattern": "Two",
         "replace": "Blue",
         "replacestrregex": "One Fish Two Fish",
       }
     `);
-    expect(q.ReplaceStrRegex('One Fish Two Fish', 'Two', 'Blue', true))
-      .toMatchInlineSnapshot(`
+  expect(q.ReplaceStrRegex('One Fish Two Fish', 'Two', 'Blue', true))
+    .toMatchInlineSnapshot(`
       Object {
         "first": true,
         "pattern": "Two",
@@ -3738,12 +3725,12 @@ describe('Functions', () => {
         "replacestrregex": "One Fish Two Fish",
       }
     `);
-  });
+});
 
-  test('Reverse', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Reverse', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Reverse(['a', 'b', 'c', 1, 2, 3])).toMatchInlineSnapshot(`
+  expect(q.Reverse(['a', 'b', 'c', 1, 2, 3])).toMatchInlineSnapshot(`
       Object {
         "reverse": Array [
           "a",
@@ -3755,21 +3742,21 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Role', () => {
-    const q = new Query<{
-      Roles: ['moderator'];
-      Databases: ['db1'];
-    }>();
+test('Role', () => {
+  const q = new Query<{
+    Roles: ['moderator'];
+    Databases: ['db1'];
+  }>();
 
-    expect(q.Role('moderator')).toMatchInlineSnapshot(`
+  expect(q.Role('moderator')).toMatchInlineSnapshot(`
       Object {
         "role": "moderator",
       }
     `);
 
-    expect(q.Role('moderator', q.Database('db1'))).toMatchInlineSnapshot(`
+  expect(q.Role('moderator', q.Database('db1'))).toMatchInlineSnapshot(`
       Object {
         "role": "moderator",
         "scope": Object {
@@ -3777,57 +3764,57 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Roles', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Roles', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Roles()).toMatchInlineSnapshot(`
+  expect(q.Roles()).toMatchInlineSnapshot(`
       Object {
         "roles": null,
       }
     `);
-    expect(q.Roles(q.Database('child_db'))).toMatchInlineSnapshot(`
+  expect(q.Roles(q.Database('child_db'))).toMatchInlineSnapshot(`
       Object {
         "roles": Object {
           "database": "child_db",
         },
       }
     `);
-  });
+});
 
-  test('Round', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Round', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Round(1234.5678)).toMatchInlineSnapshot(`
+  expect(q.Round(1234.5678)).toMatchInlineSnapshot(`
       Object {
         "round": 1234.5678,
       }
     `);
-    expect(q.Round(1234.5678, 2)).toMatchInlineSnapshot(`
+  expect(q.Round(1234.5678, 2)).toMatchInlineSnapshot(`
       Object {
         "precision": 2,
         "round": 1234.5678,
       }
     `);
-  });
+});
 
-  test('Second', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Second', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Second(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.Second(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "second": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
+});
 
-  test('Select', () => {
-    const q = new Query();
+test('Select', () => {
+  const q = new Query();
 
-    expect(q.Select(0, [1, 2])).toMatchInlineSnapshot(`
+  expect(q.Select(0, [1, 2])).toMatchInlineSnapshot(`
       Object {
         "from": Array [
           1,
@@ -3837,7 +3824,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Select([0], [1, 2])).toMatchInlineSnapshot(`
+  expect(q.Select([0], [1, 2])).toMatchInlineSnapshot(`
       Object {
         "from": Array [
           1,
@@ -3849,7 +3836,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Select([1], [1, 2])).toMatchInlineSnapshot(`
+  expect(q.Select([1], [1, 2])).toMatchInlineSnapshot(`
       Object {
         "from": Array [
           1,
@@ -3861,7 +3848,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Select(['key1'], { key1: 'test' })).toMatchInlineSnapshot(`
+  expect(q.Select(['key1'], { key1: 'test' })).toMatchInlineSnapshot(`
       Object {
         "from": Object {
           "object": Object {
@@ -3874,7 +3861,7 @@ describe('Functions', () => {
       }
     `);
 
-    expect(q.Select(['key2'], { key2: 'test' }, 'test')).toMatchInlineSnapshot(`
+  expect(q.Select(['key2'], { key2: 'test' }, 'test')).toMatchInlineSnapshot(`
       Object {
         "default": "test",
         "from": Object {
@@ -3888,20 +3875,20 @@ describe('Functions', () => {
       }
     `);
 
-    expect(
-      q.Select(
-        ['var1'],
+  expect(
+    q.Select(
+      ['var1'],
 
-        q.Let(
-          {
-            var1: 1,
-          },
-          {
-            var1: q.Var('var1'),
-          }
-        )
+      q.Let(
+        {
+          var1: 1,
+        },
+        {
+          var1: q.Var('var1'),
+        }
       )
-    ).toMatchInlineSnapshot(`
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "from": Object {
           "in": Object {
@@ -3922,33 +3909,33 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Sign', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Sign', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Sign(3)).toMatchInlineSnapshot(`
+  expect(q.Sign(3)).toMatchInlineSnapshot(`
       Object {
         "sign": 3,
       }
     `);
-  });
+});
 
-  test('Sin', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Sin', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Sin(0.5)).toMatchInlineSnapshot(`
+  expect(q.Sin(0.5)).toMatchInlineSnapshot(`
       Object {
         "sin": 0.5,
       }
     `);
-  });
+});
 
-  test('Singleton', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Singleton', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Singleton(q.Ref(q.Collection('spells'), '233286601218720256')))
-      .toMatchInlineSnapshot(`
+  expect(q.Singleton(q.Ref(q.Collection('spells'), '233286601218720256')))
+    .toMatchInlineSnapshot(`
       Object {
         "singleton": Object {
           "id": "233286601218720256",
@@ -3958,71 +3945,71 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Sinh', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Sinh', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Sinh(0.5)).toMatchInlineSnapshot(`
+  expect(q.Sinh(0.5)).toMatchInlineSnapshot(`
       Object {
         "sinh": 0.5,
       }
     `);
-  });
+});
 
-  test('Space', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Space', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Space(20)).toMatchInlineSnapshot(`
+  expect(q.Space(20)).toMatchInlineSnapshot(`
       Object {
         "space": 20,
       }
     `);
-  });
+});
 
-  test('Sqrt', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Sqrt', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Sqrt(16)).toMatchInlineSnapshot(`
+  expect(q.Sqrt(16)).toMatchInlineSnapshot(`
       Object {
         "sqrt": 16,
       }
     `);
-  });
+});
 
-  test('StartsWith', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('StartsWith', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.StartsWith('Fauna', 'F')).toMatchInlineSnapshot(`
+  expect(q.StartsWith('Fauna', 'F')).toMatchInlineSnapshot(`
       Object {
         "search": "F",
         "startswith": "Fauna",
       }
     `);
-  });
+});
 
-  test('SubString', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('SubString', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.SubString('ABCDEFGHIJK', -4)).toMatchInlineSnapshot(`
+  expect(q.SubString('ABCDEFGHIJK', -4)).toMatchInlineSnapshot(`
       Object {
         "start": -4,
         "substring": "ABCDEFGHIJK",
       }
     `);
-    expect(q.SubString('ABCDEFGHIJK', 2, 3)).toMatchInlineSnapshot(`
+  expect(q.SubString('ABCDEFGHIJK', 2, 3)).toMatchInlineSnapshot(`
       Object {
         "length": 3,
         "start": 2,
         "substring": "ABCDEFGHIJK",
       }
     `);
-  });
+});
 
-  test('Subtract', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Subtract', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Subtract(100, 10)).toMatchInlineSnapshot(`
+  expect(q.Subtract(100, 10)).toMatchInlineSnapshot(`
       Object {
         "subtract": Array [
           100,
@@ -4030,12 +4017,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Sum', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Sum', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
+  expect(q.Sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
       Object {
         "sum": Array [
           1,
@@ -4051,12 +4038,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('Take', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Take', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Take(2, [1, 2, 3])).toMatchInlineSnapshot(`
+  expect(q.Take(2, [1, 2, 3])).toMatchInlineSnapshot(`
       Object {
         "collection": Array [
           1,
@@ -4066,48 +4053,48 @@ describe('Functions', () => {
         "take": 2,
       }
     `);
-  });
+});
 
-  test('Tan', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Tan', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Tan(0.5)).toMatchInlineSnapshot(`
+  expect(q.Tan(0.5)).toMatchInlineSnapshot(`
       Object {
         "tan": 0.5,
       }
     `);
-  });
+});
 
-  test('Tanh', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Tanh', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Tanh(0.5)).toMatchInlineSnapshot(`
+  expect(q.Tanh(0.5)).toMatchInlineSnapshot(`
       Object {
         "tanh": 0.5,
       }
     `);
-  });
+});
 
-  test('Time', () => {
-    const q = new Query();
+test('Time', () => {
+  const q = new Query();
 
-    expect(q.Time('1970-01-01T00:00:00+00:00')).toMatchInlineSnapshot(`
+  expect(q.Time('1970-01-01T00:00:00+00:00')).toMatchInlineSnapshot(`
       Object {
         "time": "1970-01-01T00:00:00+00:00",
       }
     `);
 
-    expect(q.Time('now')).toMatchInlineSnapshot(`
+  expect(q.Time('now')).toMatchInlineSnapshot(`
       Object {
         "time": "now",
       }
     `);
-  });
+});
 
-  test('TimeAdd', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('TimeAdd', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.TimeAdd(q.Epoch(0, 'second'), 1, 'day')).toMatchInlineSnapshot(`
+  expect(q.TimeAdd(q.Epoch(0, 'second'), 1, 'day')).toMatchInlineSnapshot(`
       Object {
         "offset": 1,
         "time_add": Object {
@@ -4117,27 +4104,27 @@ describe('Functions', () => {
         "unit": "day",
       }
     `);
-  });
+});
 
-  test('TimeDiff', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('TimeDiff', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Let(
-        {
-          start: q.Time('1970-01-01T00:00:00+00:00'),
-          finish: q.Time('2020-07-06T12:34:56.789Z'),
-        },
-        [
-          q.TimeDiff(q.Var('start'), q.Var('finish'), 'days'),
-          q.TimeDiff(q.Var('start'), q.Var('finish'), 'half days'),
-          q.TimeDiff(q.Var('start'), q.Var('finish'), 'hours'),
-          q.TimeDiff(q.Var('start'), q.Var('finish'), 'minutes'),
-          q.TimeDiff(q.Var('start'), q.Var('finish'), 'seconds'),
-          q.TimeDiff(q.Var('start'), q.Var('finish'), 'milliseconds'),
-        ]
-      )
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Let(
+      {
+        start: q.Time('1970-01-01T00:00:00+00:00'),
+        finish: q.Time('2020-07-06T12:34:56.789Z'),
+      },
+      [
+        q.TimeDiff(q.Var('start'), q.Var('finish'), 'days'),
+        q.TimeDiff(q.Var('start'), q.Var('finish'), 'half days'),
+        q.TimeDiff(q.Var('start'), q.Var('finish'), 'hours'),
+        q.TimeDiff(q.Var('start'), q.Var('finish'), 'minutes'),
+        q.TimeDiff(q.Var('start'), q.Var('finish'), 'seconds'),
+        q.TimeDiff(q.Var('start'), q.Var('finish'), 'milliseconds'),
+      ]
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "in": Array [
           Object {
@@ -4209,12 +4196,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('TimeSubtract', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('TimeSubtract', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.TimeSubtract(q.Now(), 5, 'seconds')).toMatchInlineSnapshot(`
+  expect(q.TimeSubtract(q.Now(), 5, 'seconds')).toMatchInlineSnapshot(`
       Object {
         "offset": 5,
         "time_subtract": Object {
@@ -4223,22 +4210,22 @@ describe('Functions', () => {
         "unit": "seconds",
       }
     `);
-  });
+});
 
-  test('TitleCase', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('TitleCase', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.TitleCase('JOHN the FiReMan')).toMatchInlineSnapshot(`
+  expect(q.TitleCase('JOHN the FiReMan')).toMatchInlineSnapshot(`
       Object {
         "titlecase": "JOHN the FiReMan",
       }
     `);
-  });
+});
 
-  test('ToArray', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToArray', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToArray({ name: 'Dennis', age: 37 })).toMatchInlineSnapshot(`
+  expect(q.ToArray({ name: 'Dennis', age: 37 })).toMatchInlineSnapshot(`
       Object {
         "to_array": Object {
           "object": Object {
@@ -4248,42 +4235,42 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('ToDate', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToDate', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToDate('2018-06-06')).toMatchInlineSnapshot(`
+  expect(q.ToDate('2018-06-06')).toMatchInlineSnapshot(`
       Object {
         "to_date": "2018-06-06",
       }
     `);
-  });
+});
 
-  test('ToDouble', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToDouble', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToDouble(1234.5678)).toMatchInlineSnapshot(`
+  expect(q.ToDouble(1234.5678)).toMatchInlineSnapshot(`
       Object {
         "to_double": 1234.5678,
       }
     `);
-  });
+});
 
-  test('ToInteger', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToInteger', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToInteger(1234.5678)).toMatchInlineSnapshot(`
+  expect(q.ToInteger(1234.5678)).toMatchInlineSnapshot(`
       Object {
         "to_integer": 1234.5678,
       }
     `);
-  });
+});
 
-  test('ToMicros', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToMicros', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToMicros(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
+  expect(q.ToMicros(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
       Object {
         "to_micros": Object {
           "epoch": 1,
@@ -4291,12 +4278,12 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('ToMillis', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToMillis', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToMillis(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
+  expect(q.ToMillis(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
       Object {
         "to_millis": Object {
           "epoch": 1,
@@ -4304,27 +4291,27 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('ToNumber', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToNumber', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToNumber(1234.5678)).toMatchInlineSnapshot(`
+  expect(q.ToNumber(1234.5678)).toMatchInlineSnapshot(`
       Object {
         "to_number": 1234.5678,
       }
     `);
-  });
+});
 
-  test('ToObject', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToObject', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.ToObject([
-        ['name', 'Dennis'],
-        ['age', 37],
-      ])
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.ToObject([
+      ['name', 'Dennis'],
+      ['age', 37],
+    ])
+  ).toMatchInlineSnapshot(`
       Object {
         "to_object": Array [
           Array [
@@ -4338,12 +4325,12 @@ describe('Functions', () => {
         ],
       }
     `);
-  });
+});
 
-  test('ToSeconds', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToSeconds', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToSeconds(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
+  expect(q.ToSeconds(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
       Object {
         "to_seconds": Object {
           "epoch": 1,
@@ -4351,34 +4338,33 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('ToString', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToString', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToString(1234.5678)).toMatchInlineSnapshot(`
+  expect(q.ToString(1234.5678)).toMatchInlineSnapshot(`
       Object {
         "to_string": 1234.5678,
       }
     `);
-  });
+});
 
-  test('ToTime', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('ToTime', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.ToTime('2020-07-06T12:34:56.789Z')).toMatchInlineSnapshot(`
+  expect(q.ToTime('2020-07-06T12:34:56.789Z')).toMatchInlineSnapshot(`
       Object {
         "to_time": "2020-07-06T12:34:56.789Z",
       }
     `);
-  });
+});
 
-  test('Tokens', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Tokens', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Create(q.Tokens(), { instance: q.Ref(q.Collection('spells'), '1') })
-    ).toMatchInlineSnapshot(`
+  expect(q.Create(q.Tokens(), { instance: q.Ref(q.Collection('spells'), '1') }))
+    .toMatchInlineSnapshot(`
       Object {
         "create": Object {
           "tokens": null,
@@ -4395,53 +4381,53 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('Trim', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Trim', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
+  expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
       Object {
         "trim": "    Fire    ",
       }
     `);
-  });
+});
 
-  test('Trunc', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Trunc', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Trunc(1234.5678)).toMatchInlineSnapshot(`
+  expect(q.Trunc(1234.5678)).toMatchInlineSnapshot(`
       Object {
         "trunc": 1234.5678,
       }
     `);
-    expect(q.Trunc(1234, -2)).toMatchInlineSnapshot(`
+  expect(q.Trunc(1234, -2)).toMatchInlineSnapshot(`
       Object {
         "precision": -2,
         "trunc": 1234,
       }
     `);
-  });
+});
 
-  test('Trim', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Trim', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
+  expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
       Object {
         "trim": "    Fire    ",
       }
     `);
-  });
+});
 
-  test('Union', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Union', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect([
-      q.Union(['A', 'B'], ['C', 'D']),
-      q.Union(['A', 'B'], ['B', 'C']),
-      q.Union(['A', 'B', 'C'], ['B', 'C'], ['B', 'C', 'D']),
-      q.Union(['A', 'B', 'C'], ['B', 'B'], ['B']),
-    ]).toMatchInlineSnapshot(`
+  expect([
+    q.Union(['A', 'B'], ['C', 'D']),
+    q.Union(['A', 'B'], ['B', 'C']),
+    q.Union(['A', 'B', 'C'], ['B', 'C'], ['B', 'C', 'D']),
+    q.Union(['A', 'B', 'C'], ['B', 'B'], ['B']),
+  ]).toMatchInlineSnapshot(`
       Array [
         Object {
           "union": Array [
@@ -4503,19 +4489,19 @@ describe('Functions', () => {
         },
       ]
     `);
-  });
+});
 
-  test('Update', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Update', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(
-      q.Update(q.Ref(q.Collection('spells'), '181388642581742080'), {
-        data: {
-          name: "Mountain's Thunder",
-          cost: null,
-        },
-      })
-    ).toMatchInlineSnapshot(`
+  expect(
+    q.Update(q.Ref(q.Collection('spells'), '181388642581742080'), {
+      data: {
+        name: "Mountain's Thunder",
+        cost: null,
+      },
+    })
+  ).toMatchInlineSnapshot(`
       Object {
         "params": Object {
           "object": Object {
@@ -4535,13 +4521,13 @@ describe('Functions', () => {
         },
       }
     `);
-  });
+});
 
-  test('UpperCase', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('UpperCase', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect([q.UpperCase('FiRe'), q.UpperCase('Fire And FireMan')])
-      .toMatchInlineSnapshot(`
+  expect([q.UpperCase('FiRe'), q.UpperCase('Fire And FireMan')])
+    .toMatchInlineSnapshot(`
       Array [
         Object {
           "uppercase": "FiRe",
@@ -4551,17 +4537,16 @@ describe('Functions', () => {
         },
       ]
     `);
-  });
+});
 
-  test('Year', () => {
-    const q = new Query<{ Collections: { spells: {} } }>();
+test('Year', () => {
+  const q = new Query<{ Collections: { spells: {} } }>();
 
-    expect(q.Year(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
+  expect(q.Year(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
         "year": Object {
           "time": "2019-04-29T12:51:17Z",
         },
       }
     `);
-  });
 });
