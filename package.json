@@ -26,8 +26,7 @@
     "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
-    "analyze": "size-limit --why",
-    "publish": "np --access public"
+    "analyze": "size-limit --why"
   },
   "peerDependencies": {},
   "husky": {
@@ -58,7 +57,6 @@
     "@size-limit/preset-small-lib": "^5.0.4",
     "dotenv-cli": "^4.0.0",
     "husky": "^7.0.2",
-    "np": "^7.5.0",
     "size-limit": "^5.0.4",
     "tsdx": "^0.14.1",
     "tslib": "^2.3.1",
