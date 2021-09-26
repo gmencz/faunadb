@@ -6,7 +6,7 @@
 
 ## The problem
 
-The official [FaunaDB client](https://github.com/fauna/faunadb-js) doesn't have great TypeScript support, it's not tree-shakable
+The official [FaunaDB client](https://github.com/fauna/faunadb-js) doesn't have great TypeScript support, isn't tree-shakable
 and the bundle size is way bigger than it should be ([20.6KB minified + gzipped](https://bundlephobia.com/package/faunadb)) considering FaunaDB is often used in serverless environments where the script size is limited.
 
 ## This solution
