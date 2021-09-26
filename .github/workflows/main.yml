@@ -11,6 +11,11 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
+      - name: create env file
+        run: |
+          touch .env
+          echo ADMIN_KEY_SECRET=${{ secrets.ADMIN_KEY_SECRET }} >> .env
+
       - name: Checkout repo
         uses: actions/checkout@v2
 
