@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/gmencz/faunadb/compare/v1.3.1...v1.4.0) (2021-09-27)
+
+### Features
+
+- **esm-support:** improve ESM support via package.json exports field ([c8adab2](https://github.com/gmencz/faunadb/commit/c8adab28c54b7c14db16300870e5b2ae3e17cf4b))
+
 ## [1.3.1](https://github.com/gmencz/faunadb/compare/v1.3.0...v1.3.1) (2021-09-27)
 
 ### Bug Fixes
