@@ -1,3 +1,13 @@
+# [2.0.0](https://github.com/gmencz/faunadb/compare/v1.4.0...v2.0.0) (2021-09-27)
+
+### Code Refactoring
+
+- **types:** rename schema type name ([7cfee5b](https://github.com/gmencz/faunadb/commit/7cfee5b8bc30e2221d10f3765fd73f7ac47d2bd3))
+
+### BREAKING CHANGES
+
+- **types:** rename QuerySchema to SchemaTypes
+
 # [1.4.0](https://github.com/gmencz/faunadb/compare/v1.3.1...v1.4.0) (2021-09-27)
 
 ### Features
