@@ -1,3 +1,13 @@
+# [3.0.0](https://github.com/gmencz/faunadb/compare/v2.0.0...v3.0.0) (2021-09-27)
+
+### Code Refactoring
+
+- **query:** rename Query to QueryBuilder ([6639cca](https://github.com/gmencz/faunadb/commit/6639cca6afa6b5c37f32e9235e873970125b21f2))
+
+### BREAKING CHANGES
+
+- **query:** Query renamed to QueryBuilder
+
 # [2.0.0](https://github.com/gmencz/faunadb/compare/v1.4.0...v2.0.0) (2021-09-27)
 
 ### Code Refactoring
