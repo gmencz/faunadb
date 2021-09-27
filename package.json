@@ -29,7 +29,7 @@
     "format": "pretty-quick --staged",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "semantic-release": "semantic-release --branches main",
+    "semantic-release": "semantic-release",
     "prepare": "husky install",
     "commit": "cz"
   },
