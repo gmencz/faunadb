@@ -345,10 +345,10 @@ test('Call', () => {
     `);
 
   expect(
-    q.Call(q.Function('add', q.Database('child1', q.Database('child2'))), [
-      2,
-      3,
-    ])
+    q.Call(
+      q.Function('add', q.Database('child1', q.Database('child2'))),
+      [2, 3]
+    )
   ).toMatchInlineSnapshot(`
       Object {
         "arguments": Array [
@@ -3397,13 +3397,11 @@ test('Reduce', () => {
   const q = new Query<{ Collections: { spells: {} } }>();
 
   expect(
-    q.Reduce(q.Lambda(['acc', 'value'], q.Add(q.Var('acc'), 1)), 0, [
-      1,
-      2,
-      3,
-      4,
-      5,
-    ])
+    q.Reduce(
+      q.Lambda(['acc', 'value'], q.Add(q.Var('acc'), 1)),
+      0,
+      [1, 2, 3, 4, 5]
+    )
   ).toMatchInlineSnapshot(`
       Object {
         "arrayOrSet": Array [

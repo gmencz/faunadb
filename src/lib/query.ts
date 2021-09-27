@@ -1515,7 +1515,7 @@ class Query<
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/let
    */
   Let = (variables: TVariables, expression: unknown) => {
-    const variablesExpression = Object.keys(variables).map(variable => ({
+    const variablesExpression = Object.keys(variables).map((variable) => ({
       [variable]: wrap(variables[variable]),
     }));
 

@@ -1,7 +1,7 @@
 const wrapValues = (obj: Record<string, unknown>) => {
   const rv: Record<string, unknown> = {};
 
-  Object.keys(obj).forEach(function(key) {
+  Object.keys(obj).forEach(function (key) {
     rv[key] = wrap(obj[key]);
   });
 
@@ -14,7 +14,7 @@ const wrap = (obj: unknown): unknown => {
   } else if (obj instanceof Expression) {
     return obj;
   } else if (Array.isArray(obj)) {
-    return new Expression(obj.map(el => wrap(el)));
+    return new Expression(obj.map((el) => wrap(el)));
   } else if (typeof obj === 'object') {
     return new Expression({
       object: wrapValues(obj as Record<string, unknown>),
