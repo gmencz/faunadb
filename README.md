@@ -1,53 +1,49 @@
-<div align="center">
-<h1>@gmencz/faunadb ⚡</h1>
+<p align="center">
+  <a aria-label="CI workflow status" href="https://github.com/gmencz/faunadb/actions/workflows/main.yml">
+    <img alt="" src="https://github.com/gmencz/faunadb/actions/workflows/main.yml/badge.svg">
+  </a>
+  
+  <a aria-label="Semantic release" href="https://github.com/semantic-release/semantic-release">
+    <img alt="" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
+  </a>
 
-<p>TypeScript-first FaunaDB client with static type inference.</p>
-</div>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/@gmencz/faunadb">
+    <img alt="" src="https://badgen.net/npm/v/@gmencz/faunadb">
+  </a>
 
-## The problem
+  <a aria-label="Package size" href="https://bundlephobia.com/result?p=@gmencz/faunadb">
+    <img alt="" src="https://badgen.net/bundlephobia/minzip/@gmencz/faunadb">
+  </a>
 
-The official [FaunaDB client](https://github.com/fauna/faunadb-js) doesn't have great TypeScript support, isn't tree-shakable
-and the bundle size is way bigger than it should be ([20.6KB minified + gzipped](https://bundlephobia.com/package/faunadb)) considering FaunaDB is often used in serverless environments where the script size is limited.
-
-## This solution
-
-This client is fully written in TypeScript with a focus on type-safety which is achieved with static type inference. You declare what your FaunaDB schema looks like and the client will ensure your queries are correctly written.
-
-I also try to avoid dependencies where possible to keep the bundle size as small as possible, currently the bundle size is under [4KB minified + gzipped](https://bundlephobia.com/package/@gmencz/faunadb).
+  <a aria-label="License" href="https://github.com/gmencz/faunadb/blob/main/LICENSE">
+    <img alt="" src="https://badgen.net/npm/license/@gmencz/faunadb">
+  </a>
+</p>
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
 - [Installation](#installation)
 - [Usage](#usage)
-  - [Todo](#todo)
-- [Inspiration](#inspiration)
 - [Issues](#issues)
   - [🐛 Bugs](#-bugs)
   - [💡 Feature Requests](#-feature-requests)
 - [LICENSE](#license)
 
-## Installation
+## Introduction
 
-This module is distributed via npm and should be installed as one of your project's `dependencies`:
+TypeScript-first FaunaDB client with static type inference. You declare what your FaunaDB schema looks like and the client will ensure your queries are written correctly.
+
+One of the main focuses of the library is to keep the bundle size as small as possible due to FaunaDB being used the most in serverless environments where script size is limited.
+
+## Installation
 
 ```
 npm install @gmencz/faunadb
 ```
 
-Or with yarn:
-
-```
-yarn add @gmencz/faunadb
-```
-
 ## Usage
-
-### Todo
-
-## Inspiration
-
-As I was working on a Cloudflare Workers API which was entirely written in TypeScript and used FaunaDB for the database, I found
-that the official client could be better so I made this.
 
 ## Issues
 

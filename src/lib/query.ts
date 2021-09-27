@@ -1,7 +1,7 @@
 import { O } from 'ts-toolbelt';
 import { Expression, wrap, wrapValues } from './expression';
 
-type QuerySchema = {
+type SchemaTypes = {
   AccessProviders?: string[];
   Collections?: Record<string, unknown>;
   Databases?: string[];
@@ -36,7 +36,7 @@ type CreateAccessProviderParams<TAccessProviderName extends string> = {
 };
 
 type CreateCollectionParams<
-  TSchema extends QuerySchema,
+  TSchema extends SchemaTypes,
   TCollectionName extends keyof TSchema['Collections']
 > = {
   name: OrExpression<TCollectionName>;
@@ -171,7 +171,7 @@ type UpdateParams = {
 };
 
 class Query<
-  TSchema extends QuerySchema = QuerySchema,
+  TSchema extends SchemaTypes = SchemaTypes,
   TVariables extends QueryVariables = QueryVariables
 > {
   /**
@@ -2443,4 +2443,4 @@ class Query<
   };
 }
 
-export { Query, QuerySchema, QueryVariables };
+export { Query, SchemaTypes, QueryVariables };
