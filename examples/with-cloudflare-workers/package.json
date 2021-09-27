@@ -33,6 +33,6 @@
     "trailingComma": "es5"
   },
   "dependencies": {
-    "@gmencz/faunadb": "^2.0.0"
+    "@gmencz/faunadb": "^3.0.0"
   }
 }

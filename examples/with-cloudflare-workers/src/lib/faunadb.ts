@@ -1,4 +1,4 @@
-import { Client, SchemaTypes } from '@gmencz/faunadb';
+import { Client, QueryBuilder, SchemaTypes } from '@gmencz/faunadb';
 
 type Schema = SchemaTypes & {
   Collections: {
@@ -9,6 +9,8 @@ type Schema = SchemaTypes & {
 
   Indexes: ['all_countries'];
 };
+
+const q = new QueryBuilder<Schema>();
 
 const createFaunaDBClient = (secret: string) => {
   return new Client({
@@ -29,4 +31,4 @@ const createFaunaDBClient = (secret: string) => {
   });
 };
 
-export { Schema, createFaunaDBClient };
+export { q, createFaunaDBClient, Schema };
