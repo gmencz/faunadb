@@ -12,5 +12,4 @@ export const tsup: Options = {
   bundle: true,
   skipNodeModulesBundle: true,
   entryPoints: ['src/index.ts'],
-  legacyOutput: true,
 };
