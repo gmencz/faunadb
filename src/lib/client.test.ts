@@ -1,11 +1,11 @@
 import { Client } from './client';
-import { Query } from './query';
+import { QueryBuilder } from './query-builder';
 
 const client = new Client({
   secret: process.env.ADMIN_KEY_SECRET!,
 });
 
-const q = new Query();
+const q = new QueryBuilder();
 
 test('echoes raw input', async () => {
   const resource1 = await client.query({ a: true });

@@ -1,7 +1,8 @@
-import { Query, QuerySchema } from './query';
+import { QueryBuilder, SchemaTypes } from './query-builder';
 
 test('Abort', () => {
-  expect(new Query().Abort('Something went wrong')).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Abort('Something went wrong'))
+    .toMatchInlineSnapshot(`
       Object {
         "abort": "Something went wrong",
       }
@@ -9,7 +10,7 @@ test('Abort', () => {
 });
 
 test('Abs', () => {
-  expect(new Query().Abs(-100)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Abs(-100)).toMatchInlineSnapshot(`
       Object {
         "abs": -100,
       }
@@ -17,7 +18,8 @@ test('Abs', () => {
 });
 
 test('AccessProvider', () => {
-  expect(new Query().AccessProvider('Auth0-myapp')).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().AccessProvider('Auth0-myapp'))
+    .toMatchInlineSnapshot(`
       Object {
         "access_provider": "Auth0-myapp",
       }
@@ -25,7 +27,7 @@ test('AccessProvider', () => {
 });
 
 test('AccessProviders', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: ['child1'];
   }>();
 
@@ -46,7 +48,7 @@ test('AccessProviders', () => {
 });
 
 test('Acos', () => {
-  expect(new Query().Acos(0.5)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Acos(0.5)).toMatchInlineSnapshot(`
       Object {
         "acos": 0.5,
       }
@@ -54,7 +56,7 @@ test('Acos', () => {
 });
 
 test('Add', () => {
-  expect(new Query().Add(1, 3)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Add(1, 3)).toMatchInlineSnapshot(`
       Object {
         "add": Array [
           1,
@@ -63,7 +65,7 @@ test('Add', () => {
       }
     `);
 
-  expect(new Query().Add(2)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Add(2)).toMatchInlineSnapshot(`
       Object {
         "add": 2,
       }
@@ -71,7 +73,7 @@ test('Add', () => {
 });
 
 test('All', () => {
-  expect(new Query().All(1, 3)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().All(1, 3)).toMatchInlineSnapshot(`
       Object {
         "all": Array [
           1,
@@ -80,7 +82,7 @@ test('All', () => {
       }
     `);
 
-  expect(new Query().All(2)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().All(2)).toMatchInlineSnapshot(`
       Object {
         "all": 2,
       }
@@ -88,7 +90,7 @@ test('All', () => {
 });
 
 test('And', () => {
-  expect(new Query().And(true, false)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().And(true, false)).toMatchInlineSnapshot(`
       Object {
         "and": Array [
           true,
@@ -97,7 +99,7 @@ test('And', () => {
       }
     `);
 
-  expect(new Query().And(true)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().And(true)).toMatchInlineSnapshot(`
       Object {
         "and": true,
       }
@@ -105,7 +107,7 @@ test('And', () => {
 });
 
 test('Any', () => {
-  expect(new Query().Any(true, false)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Any(true, false)).toMatchInlineSnapshot(`
       Object {
         "any": Array [
           true,
@@ -114,7 +116,7 @@ test('Any', () => {
       }
     `);
 
-  expect(new Query().Any(true)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Any(true)).toMatchInlineSnapshot(`
       Object {
         "any": true,
       }
@@ -122,7 +124,7 @@ test('Any', () => {
 });
 
 test('Append', () => {
-  expect(new Query().Append([1, 2, 3], [2, 2])).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Append([1, 2, 3], [2, 2])).toMatchInlineSnapshot(`
       Object {
         "append": Array [
           1,
@@ -136,8 +138,12 @@ test('Append', () => {
       }
     `);
 
-  expect(new Query().Append([1, 2, 3, { test: true }], [2, 2, { test2: true }]))
-    .toMatchInlineSnapshot(`
+  expect(
+    new QueryBuilder().Append(
+      [1, 2, 3, { test: true }],
+      [2, 2, { test2: true }]
+    )
+  ).toMatchInlineSnapshot(`
       Object {
         "append": Array [
           1,
@@ -163,7 +169,7 @@ test('Append', () => {
 });
 
 test('Asin', () => {
-  expect(new Query().Asin(0.5)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Asin(0.5)).toMatchInlineSnapshot(`
       Object {
         "asin": 0.5,
       }
@@ -171,7 +177,7 @@ test('Asin', () => {
 });
 
 test('At', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.At(q.Now(), { b: 7 })).toMatchInlineSnapshot(`
       Object {
@@ -222,7 +228,7 @@ test('At', () => {
 });
 
 test('Atan', () => {
-  expect(new Query().Atan(0.5)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Atan(0.5)).toMatchInlineSnapshot(`
       Object {
         "atan": 0.5,
       }
@@ -230,7 +236,7 @@ test('Atan', () => {
 });
 
 test('BitAnd', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.BitAnd(7)).toMatchInlineSnapshot(`
       Object {
@@ -249,7 +255,7 @@ test('BitAnd', () => {
 });
 
 test('BitNot', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.BitNot(7)).toMatchInlineSnapshot(`
       Object {
@@ -259,7 +265,7 @@ test('BitNot', () => {
 });
 
 test('BitOr', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.BitOr(7)).toMatchInlineSnapshot(`
       Object {
@@ -278,7 +284,7 @@ test('BitOr', () => {
 });
 
 test('BitXor', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.BitXor(7)).toMatchInlineSnapshot(`
       Object {
@@ -297,7 +303,7 @@ test('BitXor', () => {
 });
 
 test('Call', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: ['child1', 'child2'];
     Collections: {};
     Functions: {
@@ -385,7 +391,7 @@ test('Call', () => {
 });
 
 test('Casefold', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Casefold('Hen Wen')).toMatchInlineSnapshot(`
       Object {
@@ -402,7 +408,7 @@ test('Casefold', () => {
 });
 
 test('Ceil', () => {
-  expect(new Query().Ceil(7.0)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Ceil(7.0)).toMatchInlineSnapshot(`
       Object {
         "ceil": 7,
       }
@@ -410,7 +416,7 @@ test('Ceil', () => {
 });
 
 test('Collection', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: ['child1'];
     Functions: {};
     Collections: {
@@ -435,7 +441,7 @@ test('Collection', () => {
 });
 
 test('Collections', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: ['child1'];
     Functions: {};
     Collections: {
@@ -459,7 +465,7 @@ test('Collections', () => {
 });
 
 test('Concat', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Concat(['Hen', 'Wen'], ' ')).toMatchInlineSnapshot(`
       Object {
@@ -482,7 +488,7 @@ test('Concat', () => {
 });
 
 test('ContainsField', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(
     q.ContainsField('a', {
@@ -512,7 +518,7 @@ test('ContainsField', () => {
 });
 
 test('ContainsPath', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.ContainsPath([1, 2], [1, ['a', 'b', 'c'], 3]))
     .toMatchInlineSnapshot(`
@@ -561,7 +567,7 @@ test('ContainsPath', () => {
 });
 
 test('ContainsStr', () => {
-  expect(new Query().ContainsStr('Fauna', 'a')).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().ContainsStr('Fauna', 'a')).toMatchInlineSnapshot(`
       Object {
         "containsstr": "Fauna",
         "search": "a",
@@ -570,7 +576,7 @@ test('ContainsStr', () => {
 });
 
 test('ContainsStrRegex', () => {
-  expect(new Query().ContainsStrRegex('Fauna', '(Fa|na)'))
+  expect(new QueryBuilder().ContainsStrRegex('Fauna', '(Fa|na)'))
     .toMatchInlineSnapshot(`
       Object {
         "containsstrregex": "Fauna",
@@ -581,7 +587,7 @@ test('ContainsStrRegex', () => {
 
 test('ContainsValue', () => {
   expect(
-    new Query().ContainsValue(3, {
+    new QueryBuilder().ContainsValue(3, {
       a: 1,
       b: 2,
       c: 3,
@@ -601,7 +607,7 @@ test('ContainsValue', () => {
 });
 
 test('Cos', () => {
-  expect(new Query().Cos(0.5)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Cos(0.5)).toMatchInlineSnapshot(`
       Object {
         "cos": 0.5,
       }
@@ -609,7 +615,7 @@ test('Cos', () => {
 });
 
 test('Cosh', () => {
-  expect(new Query().Cosh(0.5)).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Cosh(0.5)).toMatchInlineSnapshot(`
       Object {
         "cosh": 0.5,
       }
@@ -617,7 +623,7 @@ test('Cosh', () => {
 });
 
 test('Count', () => {
-  expect(new Query().Count([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
+  expect(new QueryBuilder().Count([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]))
     .toMatchInlineSnapshot(`
       Object {
         "count": Array [
@@ -637,7 +643,7 @@ test('Count', () => {
 });
 
 test('Create', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: [];
     Functions: {};
     Collections: {
@@ -741,7 +747,7 @@ test('Create', () => {
 });
 
 test('CreateAccessProvider', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Roles: ['admin'];
     AccessProviders: ['Auth0-myapp'];
   }>();
@@ -861,7 +867,7 @@ test('CreateAccessProvider', () => {
 });
 
 test('CreateCollection', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Collections: {
       users: {};
     };
@@ -883,7 +889,7 @@ test('CreateCollection', () => {
 });
 
 test('CreateDatabase', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: ['child1'];
   }>();
 
@@ -903,7 +909,7 @@ test('CreateDatabase', () => {
 });
 
 test('CreateIndex', () => {
-  let q = new Query<{
+  let q = new QueryBuilder<{
     Collections: {
       users: {
         name: string;
@@ -929,7 +935,7 @@ test('CreateIndex', () => {
       }
     `);
 
-  q = new Query<{
+  q = new QueryBuilder<{
     Collections: {
       users: {
         name: string;
@@ -1043,7 +1049,7 @@ test('CreateIndex', () => {
 });
 
 test('CreateKey', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(
     q.CreateKey({
@@ -1065,7 +1071,10 @@ test('CreateKey', () => {
 });
 
 test('CreateRole', () => {
-  const q = new Query<{ Collections: { spells: {} }; Roles: ['new-role'] }>();
+  const q = new QueryBuilder<{
+    Collections: { spells: {} };
+    Roles: ['new-role'];
+  }>();
 
   expect(
     q.CreateRole({
@@ -1103,7 +1112,7 @@ test('CreateRole', () => {
 });
 
 test('Credentials', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Credentials()).toMatchInlineSnapshot(`
       Object {
@@ -1121,7 +1130,7 @@ test('Credentials', () => {
 });
 
 test('CurrentIdentity', () => {
-  expect(new Query().CurrentIdentity()).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().CurrentIdentity()).toMatchInlineSnapshot(`
       Object {
         "current_identity": null,
       }
@@ -1129,7 +1138,7 @@ test('CurrentIdentity', () => {
 });
 
 test('CurrentToken', () => {
-  expect(new Query().CurrentToken()).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().CurrentToken()).toMatchInlineSnapshot(`
       Object {
         "current_token": null,
       }
@@ -1137,7 +1146,7 @@ test('CurrentToken', () => {
 });
 
 test('Database', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: ['child1', 'child2', 'child3'];
     Collections: {};
     Functions: {};
@@ -1173,7 +1182,7 @@ test('Database', () => {
 });
 
 test('Databases', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Databases()).toMatchInlineSnapshot(`
       Object {
@@ -1191,7 +1200,7 @@ test('Databases', () => {
 });
 
 test('Date', () => {
-  expect(new Query().Date('1970-01-01')).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Date('1970-01-01')).toMatchInlineSnapshot(`
       Object {
         "date": "1970-01-01",
       }
@@ -1199,7 +1208,7 @@ test('Date', () => {
 });
 
 test('DayOfMonth', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.DayOfMonth(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
@@ -1211,7 +1220,7 @@ test('DayOfMonth', () => {
 });
 
 test('DayOfWeek', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.DayOfWeek(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
@@ -1223,7 +1232,7 @@ test('DayOfWeek', () => {
 });
 
 test('DayOfYear', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.DayOfYear(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
@@ -1235,7 +1244,7 @@ test('DayOfYear', () => {
 });
 
 test('Degrees', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Degrees(0.5)).toMatchInlineSnapshot(`
       Object {
@@ -1245,7 +1254,7 @@ test('Degrees', () => {
 });
 
 test('Delete', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Delete(q.Ref(q.Collection('spells'), '181388642581742080')))
     .toMatchInlineSnapshot(`
@@ -1261,7 +1270,7 @@ test('Delete', () => {
 });
 
 test('Difference', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Difference(['A', 'B', 'C'], ['B', 'C', 'D'])).toMatchInlineSnapshot(`
       Object {
@@ -1282,7 +1291,7 @@ test('Difference', () => {
 });
 
 test('Distinct', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Distinct(['A', 'B', 'C'])).toMatchInlineSnapshot(`
       Object {
@@ -1296,7 +1305,7 @@ test('Distinct', () => {
 });
 
 test('Divide', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Divide(10, 5, 2)).toMatchInlineSnapshot(`
       Object {
@@ -1324,7 +1333,7 @@ test('Divide', () => {
 });
 
 test('Do', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Collections: { magical_creatures: { name: string } };
   }>();
 
@@ -1370,7 +1379,7 @@ test('Do', () => {
 });
 
 test('Documents', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Collections: {
       Letters: {};
     };
@@ -1386,7 +1395,7 @@ test('Documents', () => {
 });
 
 test('Drop', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Drop(2, [1, 2, 3])).toMatchInlineSnapshot(`
       Object {
@@ -1417,7 +1426,7 @@ test('Drop', () => {
 });
 
 test('EndsWith', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.EndsWith('123', '3')).toMatchInlineSnapshot(`
       Object {
@@ -1428,7 +1437,7 @@ test('EndsWith', () => {
 });
 
 test('Epoch', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Epoch(0, 'day')).toMatchInlineSnapshot(`
       Object {
@@ -1439,7 +1448,7 @@ test('Epoch', () => {
 });
 
 test('Equals', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Equals(1, 1)).toMatchInlineSnapshot(`
       Object {
@@ -1469,7 +1478,7 @@ test('Equals', () => {
 });
 
 test('Events', () => {
-  const q = new Query<{ Collections: { posts: {} } }>();
+  const q = new QueryBuilder<{ Collections: { posts: {} } }>();
 
   expect(q.Events(q.Ref(q.Collection('posts'), '233555580689580553')))
     .toMatchInlineSnapshot(`
@@ -1485,7 +1494,7 @@ test('Events', () => {
 });
 
 test('Exists', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Exists(q.Ref(q.Collection('spells'), '181388642046968320')))
     .toMatchInlineSnapshot(`
@@ -1514,7 +1523,7 @@ test('Exists', () => {
 });
 
 test('Exp', () => {
-  const q = new Query<{ Collections: { posts: {} } }>();
+  const q = new QueryBuilder<{ Collections: { posts: {} } }>();
 
   expect(q.Exp(1.5)).toMatchInlineSnapshot(`
       Object {
@@ -1524,7 +1533,7 @@ test('Exp', () => {
 });
 
 test('Filter', () => {
-  const q = new Query<{ Collections: { posts: {} } }>();
+  const q = new QueryBuilder<{ Collections: { posts: {} } }>();
 
   expect(q.Filter([1, 2, 3], q.Lambda('i', q.Equals(0, q.Var('i')))))
     .toMatchInlineSnapshot(`
@@ -1550,7 +1559,7 @@ test('Filter', () => {
 });
 
 test('FindStr', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.FindStr('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
       Object {
@@ -1569,7 +1578,7 @@ test('FindStr', () => {
 });
 
 test('FindStrRegex', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.FindStrRegex('asdsad', 'fgfwear')).toMatchInlineSnapshot(`
       Object {
@@ -1597,7 +1606,7 @@ test('FindStrRegex', () => {
 });
 
 test('Floor', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Floor(1.0)).toMatchInlineSnapshot(`
       Object {
@@ -1607,7 +1616,7 @@ test('Floor', () => {
 });
 
 test('Foreach', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Foreach([1, 2, 3], q.Lambda('i', q.Var('i'))))
     .toMatchInlineSnapshot(`
@@ -1628,7 +1637,7 @@ test('Foreach', () => {
 });
 
 test('Floor', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Floor(1.0)).toMatchInlineSnapshot(`
       Object {
@@ -1638,7 +1647,7 @@ test('Floor', () => {
 });
 
 test('Foreach', () => {
-  const q = new Query<{ Collections: { spellbooks: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spellbooks: {} } }>();
 
   expect(
     q.Foreach(
@@ -1689,7 +1698,7 @@ test('Foreach', () => {
 });
 
 test('Format', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Format('%nDecimals:')).toMatchInlineSnapshot(`
       Object {
@@ -1730,7 +1739,7 @@ test('Format', () => {
 });
 
 test('Function', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Databases: ['child1', 'child2'];
     Collections: {};
     Functions: {
@@ -1768,7 +1777,7 @@ test('Function', () => {
 });
 
 test('Functions', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Functions()).toMatchInlineSnapshot(`
       Object {
@@ -1786,7 +1795,7 @@ test('Functions', () => {
 });
 
 test('GT', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.GT(1)).toMatchInlineSnapshot(`
       Object {
@@ -1806,7 +1815,7 @@ test('GT', () => {
 });
 
 test('GTE', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.GTE(1)).toMatchInlineSnapshot(`
       Object {
@@ -1825,7 +1834,7 @@ test('GTE', () => {
 });
 
 test('Get', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Get(q.Ref(q.Collection('spells'), '181388642046968320')))
     .toMatchInlineSnapshot(`
@@ -1841,7 +1850,7 @@ test('Get', () => {
 });
 
 test('HasCurrentIdentity', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.HasCurrentIdentity()).toMatchInlineSnapshot(`
       Object {
@@ -1851,7 +1860,7 @@ test('HasCurrentIdentity', () => {
 });
 
 test('HasCurrentToken', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.HasCurrentToken()).toMatchInlineSnapshot(`
       Object {
@@ -1861,7 +1870,7 @@ test('HasCurrentToken', () => {
 });
 
 test('Hour', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Hour(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
@@ -1873,7 +1882,7 @@ test('Hour', () => {
 });
 
 test('Hypot', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Hypot(3.0)).toMatchInlineSnapshot(`
       Object {
@@ -1889,7 +1898,7 @@ test('Hypot', () => {
 });
 
 test('Identify', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Identify(
@@ -1910,7 +1919,7 @@ test('Identify', () => {
 });
 
 test('If', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.If(true, 'was true', 'was false')).toMatchInlineSnapshot(`
       Object {
@@ -1922,7 +1931,7 @@ test('If', () => {
 });
 
 test('Index', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Index('spells_by_element')).toMatchInlineSnapshot(`
       Object {
@@ -1941,7 +1950,7 @@ test('Index', () => {
 });
 
 test('Indexes', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Paginate(q.Indexes())).toMatchInlineSnapshot(`
       Object {
@@ -1953,7 +1962,7 @@ test('Indexes', () => {
 });
 
 test('Insert', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Insert(q.Ref(q.Collection('spells'), '181388642581742080'), 1, 'create', {
@@ -1992,7 +2001,7 @@ test('Insert', () => {
 });
 
 test('Intersection', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Intersection(['A', 'B'], ['C', 'D'])).toMatchInlineSnapshot(`
       Object {
@@ -2032,7 +2041,7 @@ test('Intersection', () => {
 });
 
 test('IsArray', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsArray(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2053,7 +2062,7 @@ test('IsArray', () => {
 });
 
 test('IsBoolean', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsBoolean(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2074,7 +2083,7 @@ test('IsBoolean', () => {
 });
 
 test('IsBytes', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsBytes(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2095,7 +2104,7 @@ test('IsBytes', () => {
 });
 
 test('IsCollection', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsCollection(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2116,7 +2125,7 @@ test('IsCollection', () => {
 });
 
 test('IsCredentials', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsCredentials(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2137,7 +2146,7 @@ test('IsCredentials', () => {
 });
 
 test('IsDatabase', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsDatabase(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2158,7 +2167,7 @@ test('IsDatabase', () => {
 });
 
 test('IsDate', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsDate(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2179,7 +2188,7 @@ test('IsDate', () => {
 });
 
 test('IsDoc', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsDoc(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2200,7 +2209,7 @@ test('IsDoc', () => {
 });
 
 test('IsDouble', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsDouble(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2221,7 +2230,7 @@ test('IsDouble', () => {
 });
 
 test('IsEmpty', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsEmpty(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2233,7 +2242,7 @@ test('IsEmpty', () => {
 });
 
 test('IsFunction', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsFunction(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2254,7 +2263,7 @@ test('IsFunction', () => {
 });
 
 test('IsIndex', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsIndex(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2275,7 +2284,7 @@ test('IsIndex', () => {
 });
 
 test('IsInteger', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsInteger(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2296,7 +2305,7 @@ test('IsInteger', () => {
 });
 
 test('IsKey', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsKey(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2317,7 +2326,7 @@ test('IsKey', () => {
 });
 
 test('IsLambda', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsLambda(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2338,7 +2347,7 @@ test('IsLambda', () => {
 });
 
 test('IsNonEmpty', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsNonEmpty(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2350,7 +2359,7 @@ test('IsNonEmpty', () => {
 });
 
 test('IsNull', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsNull(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2371,7 +2380,7 @@ test('IsNull', () => {
 });
 
 test('IsNumber', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsNumber(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2392,7 +2401,7 @@ test('IsNumber', () => {
 });
 
 test('IsObject', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsObject(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2413,7 +2422,7 @@ test('IsObject', () => {
 });
 
 test('IsRef', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsRef(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2434,7 +2443,7 @@ test('IsRef', () => {
 });
 
 test('IsRole', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsRole(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2455,7 +2464,7 @@ test('IsRole', () => {
 });
 
 test('IsSet', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsSet(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2476,7 +2485,7 @@ test('IsSet', () => {
 });
 
 test('IsString', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsString(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2497,7 +2506,7 @@ test('IsString', () => {
 });
 
 test('IsTimestamp', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsTimestamp(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2518,7 +2527,7 @@ test('IsTimestamp', () => {
 });
 
 test('IsToken', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.IsToken(['array'])).toMatchInlineSnapshot(`
       Object {
@@ -2539,7 +2548,7 @@ test('IsToken', () => {
 });
 
 test('Join', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Join(
@@ -2585,7 +2594,7 @@ test('Join', () => {
 });
 
 test('KeyFromSecret', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.KeyFromSecret('123')).toMatchInlineSnapshot(`
       Object {
@@ -2595,7 +2604,7 @@ test('KeyFromSecret', () => {
 });
 
 test('Keys', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Keys()).toMatchInlineSnapshot(`
       Object {
@@ -2613,7 +2622,7 @@ test('Keys', () => {
 });
 
 test('LT', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.LT(1, 3)).toMatchInlineSnapshot(`
       Object {
@@ -2631,7 +2640,7 @@ test('LT', () => {
 });
 
 test('LTE', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.LTE(1, 3)).toMatchInlineSnapshot(`
       Object {
@@ -2649,7 +2658,7 @@ test('LTE', () => {
 });
 
 test('LTrim', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.LTrim(' Fire')).toMatchInlineSnapshot(`
       Object {
@@ -2659,7 +2668,7 @@ test('LTrim', () => {
 });
 
 test('Lambda', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Query(q.Lambda('a', 5))).toMatchInlineSnapshot(`
       Object {
@@ -2708,7 +2717,7 @@ test('Lambda', () => {
 });
 
 test('Length', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Length('fire')).toMatchInlineSnapshot(`
       Object {
@@ -2718,15 +2727,7 @@ test('Length', () => {
 });
 
 test('Let & Var', () => {
-  const q = new Query<
-    QuerySchema,
-    {
-      testVar: string;
-      testVar2: string;
-      testVar3: string[];
-      testVar4: Record<string, unknown>;
-    }
-  >();
+  const q = new QueryBuilder<SchemaTypes>();
 
   expect(
     q.Let(
@@ -2908,7 +2909,7 @@ test('Let & Var', () => {
 });
 
 test('Ln', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Ln(0.5)).toMatchInlineSnapshot(`
       Object {
@@ -2918,7 +2919,7 @@ test('Ln', () => {
 });
 
 test('Log', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Log(0.5)).toMatchInlineSnapshot(`
       Object {
@@ -2928,7 +2929,7 @@ test('Log', () => {
 });
 
 test('Login', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Login(q.Ref(q.Collection('spells'), '181388642114077184'), {
@@ -2952,7 +2953,7 @@ test('Login', () => {
 });
 
 test('Logout', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Logout(true)).toMatchInlineSnapshot(`
       Object {
@@ -2962,7 +2963,7 @@ test('Logout', () => {
 });
 
 test('LowerCase', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.LowerCase('FiRe')).toMatchInlineSnapshot(`
       Object {
@@ -2972,7 +2973,7 @@ test('LowerCase', () => {
 });
 
 test('Map', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Map([1, 2, 3], q.Lambda('x', q.Add(q.Var('x'), 1))))
     .toMatchInlineSnapshot(`
@@ -2998,7 +2999,7 @@ test('Map', () => {
 });
 
 test('Match', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Match(q.Index('spells_by_element'), 'fire')).toMatchInlineSnapshot(`
       Object {
@@ -3011,7 +3012,7 @@ test('Match', () => {
 });
 
 test('Max', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Max(1, 5, 22)).toMatchInlineSnapshot(`
       Object {
@@ -3025,7 +3026,7 @@ test('Max', () => {
 });
 
 test('Mean', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Mean([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
       Object {
@@ -3046,7 +3047,7 @@ test('Mean', () => {
 });
 
 test('Merge', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Merge({ a: 'Apple', b: 'Banana' }, { x: 'width', y: 'height' }))
     .toMatchInlineSnapshot(`
@@ -3068,7 +3069,7 @@ test('Merge', () => {
 });
 
 test('Min', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Min(1, 0, 3, -1)).toMatchInlineSnapshot(`
       Object {
@@ -3083,7 +3084,7 @@ test('Min', () => {
 });
 
 test('Minute', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Minute(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
@@ -3095,7 +3096,7 @@ test('Minute', () => {
 });
 
 test('Modulo', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Modulo(10, 5, 2)).toMatchInlineSnapshot(`
       Object {
@@ -3109,7 +3110,7 @@ test('Modulo', () => {
 });
 
 test('Month', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Month(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
@@ -3121,7 +3122,7 @@ test('Month', () => {
 });
 
 test('MoveDatabase', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.MoveDatabase(q.Database('a'), q.Database('b')))
     .toMatchInlineSnapshot(`
@@ -3137,7 +3138,7 @@ test('MoveDatabase', () => {
 });
 
 test('Multiply', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Multiply(100, 10)).toMatchInlineSnapshot(`
       Object {
@@ -3150,7 +3151,7 @@ test('Multiply', () => {
 });
 
 test('NewId', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.NewId()).toMatchInlineSnapshot(`
       Object {
@@ -3160,7 +3161,7 @@ test('NewId', () => {
 });
 
 test('Not', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Not(true)).toMatchInlineSnapshot(`
       Object {
@@ -3170,7 +3171,7 @@ test('Not', () => {
 });
 
 test('Now', () => {
-  expect(new Query().Now()).toMatchInlineSnapshot(`
+  expect(new QueryBuilder().Now()).toMatchInlineSnapshot(`
       Object {
         "now": null,
       }
@@ -3178,7 +3179,7 @@ test('Now', () => {
 });
 
 test('Or', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Or(true, true, false)).toMatchInlineSnapshot(`
       Object {
@@ -3192,7 +3193,7 @@ test('Or', () => {
 });
 
 test('Paginate', () => {
-  const q = new Query<{ Collections: { Letters: {} } }>();
+  const q = new QueryBuilder<{ Collections: { Letters: {} } }>();
 
   expect(
     q.Paginate(
@@ -3282,7 +3283,7 @@ test('Paginate', () => {
 });
 
 test('Pow', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Pow(2, 3)).toMatchInlineSnapshot(`
       Object {
@@ -3293,7 +3294,7 @@ test('Pow', () => {
 });
 
 test('Prepend', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Prepend([1, 2, 3], [4, 5, 6])).toMatchInlineSnapshot(`
       Object {
@@ -3311,8 +3312,8 @@ test('Prepend', () => {
     `);
 });
 
-test('Query', () => {
-  const q = new Query();
+test('QueryBuilder', () => {
+  const q = new QueryBuilder();
 
   expect(q.Query(q.Lambda('X', q.Var('X')))).toMatchInlineSnapshot(`
       Object {
@@ -3355,7 +3356,7 @@ test('Query', () => {
 });
 
 test('RTrim', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.RTrim('Fire\n\n\t\t  ')).toMatchInlineSnapshot(`
       Object {
@@ -3367,7 +3368,7 @@ test('RTrim', () => {
 });
 
 test('Radians', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Radians(2)).toMatchInlineSnapshot(`
       Object {
@@ -3377,7 +3378,7 @@ test('Radians', () => {
 });
 
 test('Range', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Range(q.Match(q.Index('letters')), 'F', 'M')).toMatchInlineSnapshot(`
       Object {
@@ -3394,7 +3395,7 @@ test('Range', () => {
 });
 
 test('Reduce', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Reduce(
@@ -3597,7 +3598,7 @@ test('Reduce', () => {
 });
 
 test('Ref', () => {
-  const q = new Query<{ Collections: { spells: string } }>();
+  const q = new QueryBuilder<{ Collections: { spells: string } }>();
 
   expect(q.Ref(q.Collection('spells'), '181388642046968320'))
     .toMatchInlineSnapshot(`
@@ -3611,7 +3612,7 @@ test('Ref', () => {
 });
 
 test('RegexEscape', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.RegexEscape('.Fa*[un]a{1,}')).toMatchInlineSnapshot(`
       Object {
@@ -3621,7 +3622,7 @@ test('RegexEscape', () => {
 });
 
 test('Remove', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Remove(q.Ref(q.Collection('spells'), '181388642581742080'), 1, 'create')
@@ -3640,7 +3641,7 @@ test('Remove', () => {
 });
 
 test('Repeat', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Repeat('Yes')).toMatchInlineSnapshot(`
       Object {
@@ -3656,7 +3657,7 @@ test('Repeat', () => {
 });
 
 test('Replace', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Replace(q.Ref(q.Collection('spells'), '181388642581742080'), {
@@ -3691,7 +3692,7 @@ test('Replace', () => {
 });
 
 test('ReplaceStr', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ReplaceStr('One Fish Two Fish', 'Two', 'Blue'))
     .toMatchInlineSnapshot(`
@@ -3704,7 +3705,7 @@ test('ReplaceStr', () => {
 });
 
 test('ReplaceStrRegex', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ReplaceStrRegex('One Fish Two Fish', 'Two', 'Blue'))
     .toMatchInlineSnapshot(`
@@ -3726,7 +3727,7 @@ test('ReplaceStrRegex', () => {
 });
 
 test('Reverse', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Reverse(['a', 'b', 'c', 1, 2, 3])).toMatchInlineSnapshot(`
       Object {
@@ -3743,7 +3744,7 @@ test('Reverse', () => {
 });
 
 test('Role', () => {
-  const q = new Query<{
+  const q = new QueryBuilder<{
     Roles: ['moderator'];
     Databases: ['db1'];
   }>();
@@ -3765,7 +3766,7 @@ test('Role', () => {
 });
 
 test('Roles', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Roles()).toMatchInlineSnapshot(`
       Object {
@@ -3782,7 +3783,7 @@ test('Roles', () => {
 });
 
 test('Round', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Round(1234.5678)).toMatchInlineSnapshot(`
       Object {
@@ -3798,7 +3799,7 @@ test('Round', () => {
 });
 
 test('Second', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Second(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {
@@ -3810,7 +3811,7 @@ test('Second', () => {
 });
 
 test('Select', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Select(0, [1, 2])).toMatchInlineSnapshot(`
       Object {
@@ -3910,7 +3911,7 @@ test('Select', () => {
 });
 
 test('Sign', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Sign(3)).toMatchInlineSnapshot(`
       Object {
@@ -3920,7 +3921,7 @@ test('Sign', () => {
 });
 
 test('Sin', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Sin(0.5)).toMatchInlineSnapshot(`
       Object {
@@ -3930,7 +3931,7 @@ test('Sin', () => {
 });
 
 test('Singleton', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Singleton(q.Ref(q.Collection('spells'), '233286601218720256')))
     .toMatchInlineSnapshot(`
@@ -3946,7 +3947,7 @@ test('Singleton', () => {
 });
 
 test('Sinh', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Sinh(0.5)).toMatchInlineSnapshot(`
       Object {
@@ -3956,7 +3957,7 @@ test('Sinh', () => {
 });
 
 test('Space', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Space(20)).toMatchInlineSnapshot(`
       Object {
@@ -3966,7 +3967,7 @@ test('Space', () => {
 });
 
 test('Sqrt', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Sqrt(16)).toMatchInlineSnapshot(`
       Object {
@@ -3976,7 +3977,7 @@ test('Sqrt', () => {
 });
 
 test('StartsWith', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.StartsWith('Fauna', 'F')).toMatchInlineSnapshot(`
       Object {
@@ -3987,7 +3988,7 @@ test('StartsWith', () => {
 });
 
 test('SubString', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.SubString('ABCDEFGHIJK', -4)).toMatchInlineSnapshot(`
       Object {
@@ -4005,7 +4006,7 @@ test('SubString', () => {
 });
 
 test('Subtract', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Subtract(100, 10)).toMatchInlineSnapshot(`
       Object {
@@ -4018,7 +4019,7 @@ test('Subtract', () => {
 });
 
 test('Sum', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Sum([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])).toMatchInlineSnapshot(`
       Object {
@@ -4039,7 +4040,7 @@ test('Sum', () => {
 });
 
 test('Take', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Take(2, [1, 2, 3])).toMatchInlineSnapshot(`
       Object {
@@ -4054,7 +4055,7 @@ test('Take', () => {
 });
 
 test('Tan', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Tan(0.5)).toMatchInlineSnapshot(`
       Object {
@@ -4064,7 +4065,7 @@ test('Tan', () => {
 });
 
 test('Tanh', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Tanh(0.5)).toMatchInlineSnapshot(`
       Object {
@@ -4074,7 +4075,7 @@ test('Tanh', () => {
 });
 
 test('Time', () => {
-  const q = new Query();
+  const q = new QueryBuilder();
 
   expect(q.Time('1970-01-01T00:00:00+00:00')).toMatchInlineSnapshot(`
       Object {
@@ -4090,7 +4091,7 @@ test('Time', () => {
 });
 
 test('TimeAdd', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.TimeAdd(q.Epoch(0, 'second'), 1, 'day')).toMatchInlineSnapshot(`
       Object {
@@ -4105,7 +4106,7 @@ test('TimeAdd', () => {
 });
 
 test('TimeDiff', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Let(
@@ -4197,7 +4198,7 @@ test('TimeDiff', () => {
 });
 
 test('TimeSubtract', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.TimeSubtract(q.Now(), 5, 'seconds')).toMatchInlineSnapshot(`
       Object {
@@ -4211,7 +4212,7 @@ test('TimeSubtract', () => {
 });
 
 test('TitleCase', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.TitleCase('JOHN the FiReMan')).toMatchInlineSnapshot(`
       Object {
@@ -4221,7 +4222,7 @@ test('TitleCase', () => {
 });
 
 test('ToArray', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToArray({ name: 'Dennis', age: 37 })).toMatchInlineSnapshot(`
       Object {
@@ -4236,7 +4237,7 @@ test('ToArray', () => {
 });
 
 test('ToDate', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToDate('2018-06-06')).toMatchInlineSnapshot(`
       Object {
@@ -4246,7 +4247,7 @@ test('ToDate', () => {
 });
 
 test('ToDouble', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToDouble(1234.5678)).toMatchInlineSnapshot(`
       Object {
@@ -4256,7 +4257,7 @@ test('ToDouble', () => {
 });
 
 test('ToInteger', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToInteger(1234.5678)).toMatchInlineSnapshot(`
       Object {
@@ -4266,7 +4267,7 @@ test('ToInteger', () => {
 });
 
 test('ToMicros', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToMicros(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
       Object {
@@ -4279,7 +4280,7 @@ test('ToMicros', () => {
 });
 
 test('ToMillis', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToMillis(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
       Object {
@@ -4292,7 +4293,7 @@ test('ToMillis', () => {
 });
 
 test('ToNumber', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToNumber(1234.5678)).toMatchInlineSnapshot(`
       Object {
@@ -4302,7 +4303,7 @@ test('ToNumber', () => {
 });
 
 test('ToObject', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.ToObject([
@@ -4326,7 +4327,7 @@ test('ToObject', () => {
 });
 
 test('ToSeconds', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToSeconds(q.Epoch(1, 'second'))).toMatchInlineSnapshot(`
       Object {
@@ -4339,7 +4340,7 @@ test('ToSeconds', () => {
 });
 
 test('ToString', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToString(1234.5678)).toMatchInlineSnapshot(`
       Object {
@@ -4349,7 +4350,7 @@ test('ToString', () => {
 });
 
 test('ToTime', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.ToTime('2020-07-06T12:34:56.789Z')).toMatchInlineSnapshot(`
       Object {
@@ -4359,7 +4360,7 @@ test('ToTime', () => {
 });
 
 test('Tokens', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Create(q.Tokens(), { instance: q.Ref(q.Collection('spells'), '1') }))
     .toMatchInlineSnapshot(`
@@ -4382,7 +4383,7 @@ test('Tokens', () => {
 });
 
 test('Trim', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
       Object {
@@ -4392,7 +4393,7 @@ test('Trim', () => {
 });
 
 test('Trunc', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Trunc(1234.5678)).toMatchInlineSnapshot(`
       Object {
@@ -4408,7 +4409,7 @@ test('Trunc', () => {
 });
 
 test('Trim', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Trim('    Fire    ')).toMatchInlineSnapshot(`
       Object {
@@ -4418,7 +4419,7 @@ test('Trim', () => {
 });
 
 test('Union', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect([
     q.Union(['A', 'B'], ['C', 'D']),
@@ -4490,7 +4491,7 @@ test('Union', () => {
 });
 
 test('Update', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(
     q.Update(q.Ref(q.Collection('spells'), '181388642581742080'), {
@@ -4522,7 +4523,7 @@ test('Update', () => {
 });
 
 test('UpperCase', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect([q.UpperCase('FiRe'), q.UpperCase('Fire And FireMan')])
     .toMatchInlineSnapshot(`
@@ -4538,7 +4539,7 @@ test('UpperCase', () => {
 });
 
 test('Year', () => {
-  const q = new Query<{ Collections: { spells: {} } }>();
+  const q = new QueryBuilder<{ Collections: { spells: {} } }>();
 
   expect(q.Year(q.Time('2019-04-29T12:51:17Z'))).toMatchInlineSnapshot(`
       Object {

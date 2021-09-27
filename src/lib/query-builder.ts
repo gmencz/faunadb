@@ -10,8 +10,6 @@ type SchemaTypes = {
   Roles?: string[];
 };
 
-type QueryVariables = Record<string, unknown>;
-
 type OrExpression<TValue = unknown> = Expression | TValue;
 
 type Normalizer = 'NFKCCaseFold' | 'NFC' | 'NFD' | 'NFKC' | 'NFKD';
@@ -170,10 +168,7 @@ type UpdateParams = {
   ttl?: Expression;
 };
 
-class Query<
-  TSchema extends SchemaTypes = SchemaTypes,
-  TVariables extends QueryVariables = QueryVariables
-> {
+class QueryBuilder<TSchema extends SchemaTypes = SchemaTypes> {
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/abort
    */
@@ -1514,7 +1509,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/let
    */
-  Let = (variables: TVariables, expression: unknown) => {
+  Let = (variables: Record<string, unknown>, expression: unknown) => {
     const variablesExpression = Object.keys(variables).map((variable) => ({
       [variable]: wrap(variables[variable]),
     }));
@@ -2425,9 +2420,7 @@ class Query<
   /**
    * @see https://docs.fauna.com/fauna/current/api/fql/functions/var
    */
-  Var = <TVariableName extends keyof TVariables = keyof TVariables>(
-    name: TVariableName
-  ) => {
+  Var = (name: string) => {
     return new Expression({
       var: name,
     });
@@ -2443,4 +2436,4 @@ class Query<
   };
 }
 
-export { Query, SchemaTypes, QueryVariables };
+export { QueryBuilder, SchemaTypes };

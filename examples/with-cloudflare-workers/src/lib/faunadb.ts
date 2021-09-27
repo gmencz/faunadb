@@ -1,6 +1,14 @@
-import { Client } from '@gmencz/faunadb';
+import { Client, SchemaTypes } from '@gmencz/faunadb';
 
-type Schema = {};
+type Schema = SchemaTypes & {
+  Collections: {
+    countries: {
+      name: string;
+    };
+  };
+
+  Indexes: ['all_countries'];
+};
 
 const createFaunaDBClient = (secret: string) => {
   return new Client({
@@ -20,3 +28,5 @@ const createFaunaDBClient = (secret: string) => {
     },
   });
 };
+
+export { Schema, createFaunaDBClient };
