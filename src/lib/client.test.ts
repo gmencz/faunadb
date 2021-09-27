@@ -3,9 +3,6 @@ import { Query } from './query';
 
 const client = new Client({
   secret: process.env.ADMIN_KEY_SECRET!,
-  fetch: (input, init) => {
-    return fetch(input, init);
-  },
 });
 
 const q = new Query();

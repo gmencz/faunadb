@@ -1,3 +1,4 @@
+import fetch from 'cross-fetch';
 import { O } from 'ts-toolbelt';
 import { wrap } from './expression';
 import { QueryError } from './errors';
@@ -42,47 +43,40 @@ enum RegionGroupURL {
   CLASSIC = 'https://db.fauna.com/',
 }
 
+const defaultFetch: ClientConfig['fetch'] = (input, init) => {
+  return fetch(input, init);
+};
+
 class Client {
   private config: ClientConfig;
 
-  constructor(config: O.Optional<ClientConfig, 'url'>) {
+  constructor(config: O.Optional<ClientConfig, 'url' | 'fetch'>) {
     this.config = {
       ...config,
       url: config.url ?? RegionGroupURL.CLASSIC,
+      fetch: config.fetch ?? defaultFetch,
     };
   }
 
-  query = <TResource = unknown>(expression: unknown) => {
-    // For some reason, if we use async/await syntax, the bundle size increases by like
-    // 3KB and this is not acceptable.
-    // Solution: Use something like https://github.com/huozhi/bunchee for bundling
-    // and remove TSDX. This will give us more control over everything.
-    return new Promise<TResource>((resolve, reject) => {
-      this.config
-        .fetch(this.config.url, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${this.config.secret}`,
-          },
-          body: JSON.stringify(wrap(expression)),
-        })
-        .then(response => {
-          if (!response.ok) {
-            return response
-              .json()
-              .then((json: { errors: QueryError['rawErrors'] }) => {
-                const error = json.errors[0];
-                return reject(
-                  new QueryError(error.code, error.description, json.errors)
-                );
-              });
-          }
-
-          return response.json().then((json: { resource: TResource }) => {
-            return resolve(json.resource);
-          });
-        });
+  query = async <TResource = unknown>(expression: unknown) => {
+    const response = await this.config.fetch(this.config.url, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.config.secret}`,
+      },
+      body: JSON.stringify(wrap(expression)),
     });
+
+    if (!response.ok) {
+      const json = (await response.json()) as {
+        errors: QueryError['rawErrors'];
+      };
+      const error = json.errors[0];
+      throw new QueryError(error.code, error.description, json.errors);
+    }
+
+    const json = (await response.json()) as { resource: TResource };
+    return json.resource;
   };
 }
 
