@@ -1,5 +1,6 @@
 {
   "name": "@gmencz/faunadb",
+  "description": "TypeScript-first FaunaDB client with static type inference",
   "version": "1.0.0-semantic-release",
   "license": "MIT",
   "author": "gmencz",
