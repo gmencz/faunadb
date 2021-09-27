@@ -1,7 +1,14 @@
 {
-  "version": "1.2.0",
+  "name": "@gmencz/faunadb",
+  "version": "0.0.0-development",
   "license": "MIT",
+  "author": "gmencz",
+  "keywords": [
+    "faunadb",
+    "typescript"
+  ],
   "main": "dist/index.js",
+  "module": "dist/esm/index.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
@@ -19,9 +26,10 @@
     "build:dev": "NODE_ENV=development tsup-node",
     "dev": "node-dev dist/main.js",
     "test": "dotenv -- jest",
-    "prepare": "npm run build",
+    "format": "prettier --write .",
     "size": "size-limit",
-    "analyze": "size-limit --why"
+    "analyze": "size-limit --why",
+    "semantic-release": "semantic-release"
   },
   "prettier": {
     "printWidth": 80,
@@ -29,13 +37,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "@gmencz/faunadb",
-  "author": "gmencz",
-  "module": "dist/esm/index.js",
-  "keywords": [
-    "faunadb",
-    "typescript"
-  ],
   "size-limit": [
     {
       "path": "dist/index.js",
@@ -46,14 +47,36 @@
       "limit": "10 KB"
     }
   ],
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
   "devDependencies": {
+    "@commitlint/cli": "^13.1.0",
+    "@commitlint/config-conventional": "^13.1.0",
+    "@semantic-release/changelog": "^6.0.0",
+    "@semantic-release/commit-analyzer": "^9.0.1",
+    "@semantic-release/git": "^10.0.0",
+    "@semantic-release/github": "^8.0.1",
+    "@semantic-release/npm": "^8.0.0",
+    "@semantic-release/release-notes-generator": "^10.0.2",
     "@size-limit/preset-small-lib": "^5.0.4",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.10.1",
+    "commitizen": "^4.2.4",
     "dotenv-cli": "^4.0.0",
     "esbuild-jest": "^0.5.0",
+    "husky": "^7.0.2",
     "jest": "^27.2.2",
     "node-dev": "^7.0.0",
+    "semantic-release": "^18.0.0",
     "size-limit": "^5.0.4",
     "tslib": "^2.3.1",
     "tsup": "^5.2.1",
